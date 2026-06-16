@@ -28,10 +28,10 @@ avaliação física, agendamento de atividades e comunicação (notificações/l
 | Backend | Node.js + TypeScript | ✅ |
 | Framework backend | NestJS (arquitetura modular) | ✅ |
 | Frontend Web | React + TypeScript (Vite) | ✅ |
-| Mobile | PWA (reuso do web) primeiro; React Native/Expo no futuro | 🔎 |
+| Mobile | PWA (reuso do web) primeiro; React Native/Expo no futuro | ✅ |
 | Banco de dados | PostgreSQL | ✅ |
-| ORM / acesso a dados | Prisma | 🔎 |
-| Gerenciador de pacotes / monorepo | pnpm workspaces | 🔎 |
+| ORM / acesso a dados | Prisma | ✅ |
+| Gerenciador de pacotes / monorepo | pnpm workspaces | ✅ |
 
 **Plataformas-alvo:** Web (desktop, recepção/administração) e Mobile (alunos/instrutores).
 
@@ -39,15 +39,15 @@ avaliação física, agendamento de atividades e comunicação (notificações/l
 
 ## Arquitetura & Estrutura de Pastas
 
-Proposta de monorepo (a ser criada no primeiro scaffolding — **ainda não existe código de aplicação**):
+Monorepo pnpm (criado — scaffold inicial):
 
 ```
 apps/
-  api/        # backend Node + TS (NestJS/Express)
-  web/        # frontend React + TS (Vite)
+  api/        # backend NestJS + Prisma (PostgreSQL)
+  web/        # frontend React + Vite (PWA)
 packages/
-  shared/     # tipos e regras de domínio compartilhadas (web/api/mobile)
-docs/         # PRD, stories e arquitetura (alinhado ao fluxo AIOX)
+  shared/     # tipos e contratos de domínio compartilhados (web/api/mobile)
+docs/         # PRD, stories, arquitetura e rastreabilidade
 ```
 
 > O scaffolding do framework AIOX (`.aiox-core/`, `.claude/`) é infraestrutura de orquestração — **não**
@@ -150,14 +150,27 @@ O sistema deve permitir:
 
 ## Comandos
 
-> ⚠️ A definir no scaffolding — o `package.json` da aplicação ainda não existe. Preencher quando os
-> apps forem criados.
+Gerenciador: **pnpm** (workspaces). Rodar a partir da raiz do repositório.
 
 ```bash
-# npm run dev      # ambiente de desenvolvimento
-# npm test         # testes
-# npm run lint     # análise estática
-# npm run build    # build de produção
+pnpm install              # instala dependências de todo o monorepo
+
+pnpm dev                  # sobe api + web em paralelo
+pnpm dev:api              # só backend (NestJS) — http://localhost:3000/api
+pnpm dev:web             # só frontend (Vite/PWA) — http://localhost:5173
+
+pnpm build                # build de shared + apps
+pnpm lint                 # lint em todos os pacotes
+pnpm typecheck            # checagem de tipos em todos os pacotes
+pnpm test                 # testes em todos os pacotes
+```
+
+**Banco de dados (Prisma — em `apps/api`):**
+
+```bash
+cp apps/api/.env.example apps/api/.env          # configurar DATABASE_URL
+pnpm --filter @academia/api prisma:generate     # gerar o Prisma Client
+pnpm --filter @academia/api prisma:migrate      # aplicar migrations
 ```
 
 ---
