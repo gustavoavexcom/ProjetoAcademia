@@ -86,6 +86,7 @@ O sistema deve permitir:
 - Avaliação física dos alunos
 - Agendamento de aulas e atividades
 - Controle de vencimento de planos
+- Emissão de NFS-e e consulta de notas fiscais emitidas
 - Emissão de relatórios financeiros e de frequência
 - Envio de notificações e lembretes aos alunos
 
