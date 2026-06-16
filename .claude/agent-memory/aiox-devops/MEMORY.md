@@ -1,0 +1,1 @@
+- [Git Auth — Repo Owner](project_git-auth.md) — origin push exige login como gustavoavexcom; credencial valtairguarnieri em cache causa HTTP 403
