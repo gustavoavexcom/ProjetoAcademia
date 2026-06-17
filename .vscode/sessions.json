@@ -1,0 +1,30 @@
+{
+    "theme": "default",
+    "active": "academia",
+    "activateOnStartup": true,
+    "keepExistingTerminals": false,
+    "sessions": {
+        "academia": [
+            [
+                {
+                    "name": "API",
+                    "icon": "server-process",
+                    "color": "terminal.ansiBlue",
+                    "cwd": "${workspaceFolder}",
+                    "commands": [
+                        "pnpm dev:api"
+                    ]
+                },
+                {
+                    "name": "Web",
+                    "icon": "globe",
+                    "color": "terminal.ansiGreen",
+                    "cwd": "${workspaceFolder}",
+                    "commands": [
+                        "pnpm dev:web"
+                    ]
+                }
+            ]
+        ]
+    }
+}

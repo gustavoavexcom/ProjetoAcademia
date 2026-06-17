@@ -1,0 +1,32 @@
+.shell {
+  min-height: 100vh;
+}
+
+.shell__main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell__content {
+  flex: 1;
+  padding: var(--space-6);
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    width: 72px;
+  }
+  .sidebar__brand-text,
+  .sidebar__item span,
+  .sidebar__footer {
+    display: none;
+  }
+  .sidebar__item {
+    justify-content: center;
+  }
+  .shell__main {
+    margin-left: 72px;
+  }
+}

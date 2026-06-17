@@ -1,0 +1,58 @@
+/* Design tokens do Sistema de Academia — paleta extraída da marca Pro Ativa Gutha
+   (azul institucional + laranja de destaque). Único ponto de verdade para cores,
+   espaçamento, raios, sombras e tipografia. */
+:root {
+  /* Cores de marca */
+  --brand-blue: #0b5cab;
+  --brand-blue-700: #094a8c;
+  --brand-blue-50: #e8f1fb;
+  --brand-orange: #f5821f;
+  --brand-orange-600: #d96f12;
+
+  /* Superfícies / neutros */
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --sidebar-bg: #0c1b2e;
+  --sidebar-fg: #aebdd0;
+  --sidebar-fg-active: #ffffff;
+
+  /* Texto */
+  --text: #16202c;
+  --text-muted: #5b6b7c;
+  --border: #e3e8ef;
+
+  /* Estados */
+  --success: #1a7f37;
+  --success-bg: #e6f4ea;
+  --danger: #cf222e;
+  --danger-bg: #fdecec;
+  --warning: #b7791f;
+  --warning-bg: #fbf3e2;
+
+  /* Tipografia */
+  --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
+  /* Espaçamento */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  /* Raios */
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 16px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(16, 32, 50, 0.06);
+  --shadow: 0 4px 16px rgba(16, 32, 50, 0.08);
+  --shadow-lg: 0 12px 32px rgba(16, 32, 50, 0.12);
+
+  /* Layout */
+  --sidebar-w: 248px;
+  --topbar-h: 64px;
+}

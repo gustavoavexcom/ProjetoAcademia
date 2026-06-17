@@ -1,36 +1,51 @@
 import { useEffect, useState } from 'react';
-import './App.css';
-import logo from './assets/logo.png';
+import AppShell from './layout/AppShell';
+import type { ApiState } from './layout/Topbar';
+import { NAV_ITEMS, type NavKey } from './layout/navigation';
+import Dashboard from './pages/Dashboard';
+import Placeholder from './pages/Placeholder';
 
 interface HealthResponse {
   status: string;
   service: string;
+  db?: 'up' | 'down';
   timestamp: string;
 }
 
+// Base URL da API: vazia em dev (usa o proxy do Vite); URL pública em produção.
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
+
 export default function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [erro, setErro] = useState<string | null>(null);
+  const [active, setActive] = useState<NavKey>('dashboard');
+  const [apiState, setApiState] = useState<ApiState>('loading');
+  const [apiDetail, setApiDetail] = useState<string>();
 
   useEffect(() => {
-    fetch('/api/health')
+    fetch(`${API_BASE}/api/health`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-      .then(setHealth)
-      .catch((e: Error) => setErro(e.message));
+      .then((h: HealthResponse) => {
+        setApiState('ok');
+        const banco = h.db ? ` · banco ${h.db}` : '';
+        setApiDetail(`${h.service}: ${h.status}${banco}`);
+      })
+      .catch((e: Error) => {
+        setApiState('erro');
+        setApiDetail(`API indisponível (${e.message}) — inicie o backend.`);
+      });
   }, []);
 
-  return (
-    <main className="container">
-      <img src={logo} alt="Logo Academia" className="logo" />
-      <h1>Sistema de Academia</h1>
-      <p className="subtitle">Gestão de alunos, planos, treinos e acesso</p>
+  const current = NAV_ITEMS.find((i) => i.key === active);
+  const title = current?.label ?? 'Dashboard';
 
-      <section className="status">
-        <h2>Status da API</h2>
-        {health && <p className="ok">● {health.service}: {health.status}</p>}
-        {erro && <p className="erro">● API indisponível ({erro}) — inicie o backend.</p>}
-        {!health && !erro && <p>Verificando…</p>}
-      </section>
-    </main>
+  return (
+    <AppShell
+      active={active}
+      title={title}
+      apiState={apiState}
+      apiDetail={apiDetail}
+      onNavigate={setActive}
+    >
+      {active === 'dashboard' ? <Dashboard /> : <Placeholder title={title} />}
+    </AppShell>
   );
 }

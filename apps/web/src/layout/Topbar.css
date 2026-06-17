@@ -1,0 +1,111 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  height: var(--topbar-h);
+  padding: 0 var(--space-6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar__title {
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+.topbar__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  max-width: 420px;
+  margin-left: auto;
+  padding: 0 var(--space-3);
+  height: 40px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+
+.topbar__search input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.topbar__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.topbar__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.topbar__status--ok {
+  color: var(--success);
+  background: var(--success-bg);
+}
+
+.topbar__status--erro {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.topbar__status--loading {
+  color: var(--warning);
+  background: var(--warning-bg);
+}
+
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.topbar__avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-blue);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.topbar__user-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .topbar__search,
+  .topbar__user-name {
+    display: none;
+  }
+}

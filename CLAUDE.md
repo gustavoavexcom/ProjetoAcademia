@@ -26,7 +26,7 @@ avaliação física, agendamento de atividades e comunicação (notificações/l
 | Camada | Tecnologia | Status |
 |--------|-----------|--------|
 | Backend | Node.js + TypeScript | ✅ |
-| Framework backend | NestJS (arquitetura modular) | ✅ |
+| Framework backend | NestJS (arquitetura modular) sobre adaptador Fastify | ✅ |
 | Frontend Web | React + TypeScript (Vite) | ✅ |
 | Mobile | PWA (reuso do web) primeiro; React Native/Expo no futuro | ✅ |
 | Banco de dados | PostgreSQL | ✅ |
