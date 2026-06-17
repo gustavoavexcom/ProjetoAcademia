@@ -1,0 +1,101 @@
+ID;Data Matricula;Nome Aluno;CPF_CNPJ;Telefone;Plano;Valor Mensal;Status
+1;10/01/2026;Carlos Henrique Silva;123.456.789-00;(49) 99999-1111;Mensal Livre;120,00;Ativo
+2;11/01/2026;MARIA SOUZA SANTOS;98765432111;49988882222;Anual;89,90;Ativo
+3;12/01/2026;carlos henrique silva;123.456.789-00;49 999991111;Mensal;120,00;Ativo
+4;15/01/2026;Ana Paula Viana;000.111.222-33;NÃO INFORMADO;Musculacao;100,00;Trancado
+5;16/01/2026;Empresa Alfa Trade;12.345.678/0001-9A;4933221100;Corporativo;75,00;Ativo
+6;18/01/2026;Lucas Gabriel Lima;444.555.666-77;49-97777-3333;Mensal Livre;120,00;Inativo
+7;20/01/2026;Juliana Mendes;555.666.777-88;(49)96666-4444;Plano Anual;89,90;Cancelado
+8;22-01-2026;Pedro Alves Rocha;66677788899;49955556666;Pilates;150,00;Ativo
+9;25/01/2026;Marcos Paulo Faria;777.888.999-00;;Mensal Livre;120,00;Ativo
+10;26/01/2026;Fernanda Lima Cruz;888.999.000-11;49 94444-5555;Gympass;0,00;Ativo
+11;01/02/2026;Roberto Carlos Oliveira;112.223.334-45;(49) 93333-2222;Anual Gold;89,90;Ativo
+12;02/02/2026;Amanda Rodrigues;223.334.445-56;49922223333;Mensal;120,00;Inativo
+13;03/02/2026;Bruno Cesar Santos;334.445.556-67;49-91111-4444;Musculacao;100,00;Ativo
+14;05-02-2026;Camila Pitanga Silva;445.556.667-78;Nao tem;Fideliade;89,90;Ativo
+15;06/02/2026;Diego Maradona Souza;556.667.778-89;49 90000-5555;Mensal Livre;120,00;Trancado
+16;08/02/2026;Eduarda Montenegro;667.778.889-90;(49)98989-1111;Plano Anual;89,90;Ativo
+17;10/02/2026;Fabio Assuncao Melo;778.889.990-01;49987872222;Crossfit;180,00;Ativo
+18;12/02/2026;Gabriel Barbosa Gol;889.990.001-12;;Mensal;120,00;Cancelado
+19;14/02/2026;Helena Roitman;990.001.002-23;49-97676-3333;Anual;89,90;Ativo
+20;15/02/2026;Igor Guimaraes;001.002.003-34;49 965654444;Musculacao + Cardio;130,00;Ativo
+21;17/02/2026;Joao da Silva;123.456.789-00;49999991111;Mensal Livre;120,00;Ativo
+22;19/02/2026;Karina Bacchi;012.023.034-45;(49) 95454-5555;Pilates;150,00;Ativo
+23;20-02-2026;Leandro Hassum;023.034.045-56;49943436666;Anual;89,90;Inativo
+24;22/02/2026;Mariana Ximenes;034.045.056-67;49-93232-7777;Mensal Livre;120,00;Ativo
+25;25/02/2026;Neymar Junior Silva;045.056.067-78;SEM FONE;Total Pass;0,00;Ativo
+26;26/02/2026;Otavio Mesquita;056.067.078-89;49 92121-8888;Mensal;120,00;Ativo
+27;28/02/2026;Paula Toller;067.078.089-90;(49)91010-9999;Anual Gold;89,90;Ativo
+28;01/03/2026;Quiteria Chagas;078.089.090-01;49909090000;Musculacao;100,00;Cancelado
+29;02/03/2026;Rodrigo Faro;089.090.101-12;49-99898-1212;Mensal Livre;120,00;Ativo
+30;04-03-2026;Sabrina Sato;090.101.202-23;49 98787 2323;Plano Anual;89,90;Ativo
+31;05/03/2026;Tais Araujo;101.202.303-34;;Mensal;120,00;Ativo
+32;07/03/2026;Uelinton Prado;202.303.404-45;(49) 97676-3434;Crossfit;180,00;Ativo
+33;09/03/2026;Valesca Popozuda;303.404.505-56;49965654545;Anual;89,90;Inativo
+34;10/03/2026;Wanderlei Silva;404.505.606-67;49-95454-5656;Mensal Livre;120,00;Ativo
+35;12/03/2026;Xuxa Meneghel;505.606.707-78;Falar com Assessoria;Pilates;150,00;Ativo
+36;14/03/2026;Yudi Tamashiro;606.707.808-89;49 94343 6767;Mensal;120,00;Ativo
+37;15-03-2026;Zeca Pagodinho;707.808.909-90;(49)93232-7878;Anual;89,90;Ativo
+38;17/03/2026;Adriana Esteves;808.909.010-01;49921218989;Musculacao;100,00;Trancado
+39;19/03/2026;Beto Jamaica;909.010.111-12;49-91010-9090;Mensal Livre;120,00;Ativo
+40;20/03/2026;Claudio Marzo;010.111.212-23;;Gympass;0,00;Ativo
+41;22/03/2026;Daniela Mercury;111.212.313-34;(49) 99898-3434;Anual Gold;89,90;Ativo
+42;24/03/2026;Elba Ramalho;212.313.414-45;49987874545;Mensal;120,00;Ativo
+43;25-03-2026;Fagner Raimundo;313.414.515-56;49-97676-5656;Crossfit;180,00;Cancelado
+44;27/03/2026;Gaby Amarantos;414.515.616-67;49 96565 6767;Anual;89,90;Ativo
+45;29/03/2026;Humberto Gessinger;515.616.717-78;;Mensal Livre;120,00;Ativo
+46;30/03/2026;Iza Silva;615.616.818-89;(49) 95454-7878;Musculacao;100,00;Inativo
+47;01/04/2026;Jorge Ben Jor;717.818.919-90;49943438989;Plano Anual;89,90;Ativo
+48;02/04/2026;Katinguele Grupo;818.919.020-01;49-93232-9090;Corporativo;75,00;Ativo
+49;04-04-2026;Lulu Santos;919.020.121-12;49 92121 0101;Mensal Livre;120,00;Ativo
+50;05/04/2026;Martinho da Vila;020.121.232-23;;Anual;89,90;Ativo
+51;07/04/2026;Nando Reis;121.232.343-34;(49) 91010-1212;Pilates;150,00;Ativo
+52;09/04/2026;Orlando Morais;232.343.454-45;49998985656;Mensal;120,00;Ativo
+53;10/04/2026;Péricles Apodi;343.454.565-56;49-98787-6767;Crossfit;180,00;Cancelado
+54;12-04-2026;Quinzinho Portugal;454.565.676-67;49 97676 7878;Anual Gold;89,90;Ativo
+55;14/04/2026;Reginaldo Rossi;565.676.787-78;;Mensal Livre;120,00;Ativo
+56;15/04/2026;Sandra de Sa;676.787.898-89;(49) 96565-8989;Musculacao;100,00;Ativo
+57;17/04/2026;Tiririca Silva;898.898.898-89;49954549090;Mensal;120,00;Inativo
+58;19/04/2026;Umberto Magnani;898.909.010-22;49-94343-0101;Anual;89,90;Ativo
+59;20-04-2026;Vinicius de Moraes;909.010.121-33;49 93232 1212;Total Pass;0,00;Ativo
+60;22/04/2026;Walter Mercado;010.121.232-44;;Mensal Livre;120,00;Ativo
+61;24/04/2026;Xande de Pilares;121.232.343-55;(49) 92121-3434;Plano Anual;89,90;Ativo
+62;25/04/2026;Yasmin Brunet;232.343.454-66;49910105656;Musculacao;100,00;Trancado
+63;27-04-2026;Zelia Duncan;343.454.565-77;49-99898-7878;Anual;89,90;Ativo
+64;29/04/2026;Alcione Marrom;454.565.676-88;49 98787 8989;Crossfit;180,00;Ativo
+65;30/04/2026;Belo Cantor;565.676.787-99;;Mensal Livre;120,00;Ativo
+66;02/05/2026;Chitaozinho Lima;676.787.898-00;(49) 97676-9090;Anual Gold;89,90;Cancelado
+67;03/05/2026;Xororo Lima;787.898.909-11;49965650101;Anual Gold;89,90;Ativo
+68;05-05-2026;Daniel Camargo;898.909.010-22;49-95454-1212;Mensal;120,00;Ativo
+69;06/05/2026;Emanuelle Araujo;909.010.121-33;49 94343 3434;Pilates;150,00;Ativo
+70;08/05/2026;Fafa de Belem;010.121.232-44;;Mensal Livre;120,00;Ativo
+71;10/05/2026;Guilherme Arantes;121.232.343-55;(49) 93232-5656;Anual;89,90;Inativo
+72;12/05/2026;Heltom Mello;232.343.454-66;49921217878;Musculacao;100,00;Ativo
+73;14-05-2026;Ivan Lins;343.454.565-77;49-91010-8989;Gympass;0,00;Ativo
+74;15/05/2026;Joao Bosco;454.565.676-88;49 99898 9090;Plano Anual;89,90;Ativo
+75;17/05/2026;Kiko Loureiro;565.676.787-99;;Mensal Livre;120,00;Ativo
+76;19/05/2026;Lobao Soares;676.787.898-00;(49) 98787-0101;Crossfit;180,00;Ativo
+77;20/05/2026;Milton Nascimento;787.898.909-11;49976761212;Anual;89,90;Trancado
+78;22-05-2026;Ney Matogrosso;898.909.010-22;49-96565-3434;Mensal;120,00;Ativo
+79;24/05/2026;Oswaldo Montenegro;909.010.121-33;49 95454 5656;Pilates;150,00;Ativo
+80;25/05/2026;Paulo Ricardo;010.121.232-44;;Mensal Livre;120,00;Ativo
+81;27/05/2026;Academia Fitness Corp;98.765.432/0001-1B;4933224455;Corporativo;75,00;Ativo
+82;29/05/2026;Rita Lee Jones;121.232.343-55;(49) 94343-7878;Anual Gold;89,90;Cancelado
+83;30-05-2026;Sandra Annenberg;232.343.454-66;49932328989;Musculacao;100,00;Ativo
+84;01/06/2026;Tony Ramos;343.454.565-77;49-92121-9090;Anual;89,90;Ativo
+85;02/06/2026;Ulisses Guimaraes;454.565.676-88;49 91010 0101;Mensal Livre;120,00;Ativo
+86;03/06/2026;Vera Fischer;565.676.787-99;;Gympass;0,00;Ativo
+87;05/06/2026;Waldick Soriano;676.787.898-00;(49) 99898-1212;Crossfit;180,00;Inativo
+88;06-06-2026;Zeze di Camargo;787.898.909-11;49987873434;Anual;89,90;Ativo
+89;08/06/2026;Luciano di Camargo;898.909.010-22;49-97676-5656;Anual Gold;89,90;Ativo
+90;09/06/2026;Ana Carolina;909.010.121-33;49 96565 7878;Mensal Livre;120,00;Ativo
+91;10/06/2026;Arnaldo Antunes;010.121.232-44;;Musculacao;100,00;Ativo
+92;11/06/2026;Baby do Brasil;121.232.343-55;(49) 95454-8989;Plano Anual;89,90;Ativo
+93;12-06-2026;Carlinhos Brown;232.343.454-66;49943439090;Mensal;120,00;Trancado
+94;13/06/2026;Dinho Ouro Preto;343.454.565-77;49-93232-0101;Crossfit;180,00;Ativo
+95;14/06/2026;Erasmo Carlos;454.565.676-88;49 92121 1212;Anual;89,90;Ativo
+96;14/06/2026;Frejat Silva;565.676.787-99;;Mensal Livre;120,00;Ativo
+97;15/06/2026;Gal Costa;676.787.898-00;(49) 91010-3434;Pilates;150,00;Ativo
+98;15/06/2026;Herbert Vianna;787.898.909-11;49998985656;Anual Gold;89,90;Ativo
+99;15/06/2026;Inacio Lula;898.909.010-22;49-98787-7878;Mensal;120,00;Ativo
+100;15/06/2026;Jair Messias;909.010.121-33;49 97676 8989;Mensal Livre;120,00;Ativo

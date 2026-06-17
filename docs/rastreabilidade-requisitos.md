@@ -4,7 +4,7 @@
 > Fonte da verdade dos requisitos: [`CLAUDE.md`](../CLAUDE.md).
 > Atualizar este documento sempre que um requisito, módulo ou caso de uso for adicionado/alterado/removido.
 
-**Última atualização:** 2026-06-15
+**Última atualização:** 2026-06-17
 
 ---
 
@@ -118,3 +118,27 @@ centrais. Devem ser cobertos por stories próprias na fase de desenvolvimento:
 
 ✅ Todos os requisitos do `CLAUDE.md` original estão rastreados. Nenhum requisito foi perdido na
 reescrita do `CLAUDE.md`.
+
+---
+
+## 7. Status de Implementação (2026-06-17)
+
+Entrega full-stack dos módulos do núcleo + Fiscal/Treino/Avaliação/Acesso. Detalhes em
+[`implementacao-2026-06-17.md`](./implementacao-2026-06-17.md).
+
+| Módulo | RF | API | Tela | Status |
+|--------|----|-----|------|--------|
+| MOD-01 Aluno | RF-01 | `/api/alunos` (CRUD) | Alunos | ✅ Implementado |
+| MOD-03 Plano | RF-03, RF-09 | `/api/planos` (CRUD) + vínculo no aluno | Planos | ✅ Implementado |
+| MOD-04 Financeiro | RF-03, RF-04 | `/api/mensalidades` (gerar/pagar/inadimplentes) | Financeiro | ✅ Implementado |
+| MOD-05 Fiscal | RF-12 | `/api/notas` (emitir/consultar/cancelar) | Fiscal | ✅ Implementado (NFS-e simulada) |
+| MOD-06 Treino | RF-06 | `/api/treinos` (CRUD + atribuir) | Treinos | ✅ Implementado |
+| MOD-07 Avaliação Física | RF-07 | `/api/avaliacoes` (CRUD) | Treinos (seção) | ✅ Implementado |
+| MOD-08 Acesso | RF-05 | `/api/acessos` (registrar/histórico) | Acesso | ✅ Implementado |
+| MOD-02 Funcionários | RF-02 | — | — | ⏳ Pendente |
+| MOD-09 Agendamento | RF-08 | — | — | ⏳ Pendente |
+| MOD-10 Notificações | RF-11 | — | — | ⏳ Pendente |
+| MOD-11 Relatórios | RF-10 | — | — | ⏳ Pendente |
+
+**Importação de dados:** 100 registros de `historico_academia.csv` normalizados → 66 alunos
+(34 duplicados de CPF/CNPJ ignorados) e 13 planos distintos (seed em `apps/api/prisma/seed.ts`).

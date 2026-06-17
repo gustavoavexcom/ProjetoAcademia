@@ -1,8 +1,10 @@
 import {
+  IsDateString,
   IsEmail,
   IsEnum,
   IsOptional,
   IsString,
+  IsUUID,
   Length,
   Matches,
   MinLength,
@@ -14,11 +16,14 @@ export class CreateAlunoDto {
   @MinLength(2, { message: 'nome deve ter ao menos 2 caracteres' })
   nome!: string;
 
+  @IsOptional()
   @IsEmail({}, { message: 'email inválido' })
-  email!: string;
+  email?: string;
 
   @IsString()
-  @Matches(/^\d{11}$/, { message: 'cpf deve conter 11 dígitos (somente números)' })
+  @Matches(/^\d{11,14}$/, {
+    message: 'cpf/cnpj deve conter de 11 a 14 dígitos (somente números)',
+  })
   cpf!: string;
 
   @IsOptional()
@@ -29,4 +34,12 @@ export class CreateAlunoDto {
   @IsOptional()
   @IsEnum(StatusAluno, { message: 'status inválido' })
   status?: StatusAluno;
+
+  @IsOptional()
+  @IsDateString({}, { message: 'dataMatricula deve ser uma data válida (ISO)' })
+  dataMatricula?: string;
+
+  @IsOptional()
+  @IsUUID('all', { message: 'planoId inválido' })
+  planoId?: string;
 }

@@ -1,10 +1,6 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { traduzErroPrisma } from '../common/prisma-error';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
 
@@ -16,16 +12,22 @@ export class AlunosService {
     try {
       return await this.prisma.aluno.create({ data: dto });
     } catch (error) {
-      throw this.traduzErro(error);
+      throw traduzErroPrisma(error, 'aluno');
     }
   }
 
   findAll() {
-    return this.prisma.aluno.findMany({ orderBy: { criadoEm: 'desc' } });
+    return this.prisma.aluno.findMany({
+      orderBy: { criadoEm: 'desc' },
+      include: { plano: true },
+    });
   }
 
   async findOne(id: string) {
-    const aluno = await this.prisma.aluno.findUnique({ where: { id } });
+    const aluno = await this.prisma.aluno.findUnique({
+      where: { id },
+      include: { plano: true },
+    });
     if (!aluno) {
       throw new NotFoundException(`Aluno ${id} não encontrado`);
     }
@@ -37,22 +39,17 @@ export class AlunosService {
     try {
       return await this.prisma.aluno.update({ where: { id }, data: dto });
     } catch (error) {
-      throw this.traduzErro(error);
+      throw traduzErroPrisma(error, 'aluno');
     }
   }
 
   async remove(id: string) {
     await this.findOne(id);
-    await this.prisma.aluno.delete({ where: { id } });
-    return { id, removido: true };
-  }
-
-  /** Converte erros conhecidos do Prisma em exceções HTTP apropriadas. */
-  private traduzErro(error: unknown): Error {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-      const alvo = (error.meta?.target as string[] | undefined)?.join(', ') ?? 'campo único';
-      return new ConflictException(`Já existe um aluno com este ${alvo}`);
+    try {
+      await this.prisma.aluno.delete({ where: { id } });
+    } catch (error) {
+      throw traduzErroPrisma(error, 'aluno');
     }
-    return error instanceof Error ? error : new Error(String(error));
+    return { id, removido: true };
   }
 }

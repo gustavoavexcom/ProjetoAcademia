@@ -91,6 +91,13 @@ export const IconChart = (p: IconProps) => (
   </svg>
 );
 
+export const IconReceipt = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M6 3h12v18l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3L6 21V3Z" />
+    <path d="M9 8h6M9 12h6" />
+  </svg>
+);
+
 export const IconSearch = (p: IconProps) => (
   <svg {...base(p)}>
     <circle cx="11" cy="11" r="6.5" />

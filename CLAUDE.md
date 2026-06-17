@@ -171,6 +171,7 @@ pnpm test                 # testes em todos os pacotes
 cp apps/api/.env.example apps/api/.env          # configurar DATABASE_URL
 pnpm --filter @academia/api prisma:generate     # gerar o Prisma Client
 pnpm --filter @academia/api prisma:migrate      # aplicar migrations
+pnpm --filter @academia/api prisma:seed         # importar historico_academia.csv
 ```
 
 ---

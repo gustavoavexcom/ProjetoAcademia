@@ -1,9 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import AppShell from './layout/AppShell';
 import type { ApiState } from './layout/Topbar';
 import { NAV_ITEMS, type NavKey } from './layout/navigation';
 import Dashboard from './pages/Dashboard';
 import Placeholder from './pages/Placeholder';
+import Alunos from './pages/Alunos';
+import Planos from './pages/Planos';
+import Financeiro from './pages/Financeiro';
+import Fiscal from './pages/Fiscal';
+import Treinos from './pages/Treinos';
+import Acesso from './pages/Acesso';
+
+// Mapa de roteamento por estado (sem react-router). Módulos sem página dedicada
+// caem no Placeholder ("em construção").
+const PAGINAS: Partial<Record<NavKey, ComponentType>> = {
+  dashboard: Dashboard,
+  alunos: Alunos,
+  planos: Planos,
+  financeiro: Financeiro,
+  fiscal: Fiscal,
+  treinos: Treinos,
+  acesso: Acesso,
+};
 
 interface HealthResponse {
   status: string;
@@ -36,6 +54,7 @@ export default function App() {
 
   const current = NAV_ITEMS.find((i) => i.key === active);
   const title = current?.label ?? 'Dashboard';
+  const Pagina = PAGINAS[active];
 
   return (
     <AppShell
@@ -45,7 +64,7 @@ export default function App() {
       apiDetail={apiDetail}
       onNavigate={setActive}
     >
-      {active === 'dashboard' ? <Dashboard /> : <Placeholder title={title} />}
+      {Pagina ? <Pagina /> : <Placeholder title={title} />}
     </AppShell>
   );
 }

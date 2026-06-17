@@ -1,5 +1,5 @@
 // Schema Prisma — Sistema de Academia
-// Modelos iniciais alinhados aos módulos do CLAUDE.md. Evoluir por migration.
+// Modelos alinhados aos módulos do CLAUDE.md. Evoluir por migration.
 
 generator client {
   provider = "prisma-client-js"
@@ -14,6 +14,8 @@ enum StatusAluno {
   ATIVO
   INATIVO
   SUSPENSO
+  TRANCADO
+  CANCELADO
 }
 
 enum StatusMensalidade {
@@ -28,31 +30,44 @@ enum TipoAcesso {
   SAIDA
 }
 
+enum StatusNota {
+  EMITIDA
+  CANCELADA
+}
+
 // MOD-01 — Aluno
 model Aluno {
-  id           String        @id @default(uuid())
-  nome         String
-  email        String        @unique
-  cpf          String        @unique
-  telefone     String?
-  status       StatusAluno   @default(ATIVO)
-  criadoEm     DateTime      @default(now())
-  atualizadoEm DateTime      @updatedAt
-  mensalidades Mensalidade[]
-  acessos      Acesso[]
+  id            String           @id @default(uuid())
+  nome          String
+  email         String?          @unique
+  cpf           String           @unique
+  telefone      String?
+  status        StatusAluno      @default(ATIVO)
+  dataMatricula DateTime?
+  plano         Plano?           @relation(fields: [planoId], references: [id])
+  planoId       String?
+  criadoEm      DateTime         @default(now())
+  atualizadoEm  DateTime         @updatedAt
+  mensalidades  Mensalidade[]
+  acessos       Acesso[]
+  avaliacoes    AvaliacaoFisica[]
+  treinos       Treino[]
+  notas         NotaFiscal[]
 
+  @@index([planoId])
   @@map("alunos")
 }
 
 // MOD-03 — Plano
 model Plano {
   id           String        @id @default(uuid())
-  nome         String
+  nome         String        @unique
   valorMensal  Decimal       @db.Decimal(10, 2)
   descricao    String?
   ativo        Boolean       @default(true)
   criadoEm     DateTime      @default(now())
   mensalidades Mensalidade[]
+  alunos       Aluno[]
 
   @@map("planos")
 }
@@ -70,6 +85,7 @@ model Mensalidade {
   status      StatusMensalidade @default(PENDENTE)
   pagoEm      DateTime?
   criadoEm    DateTime          @default(now())
+  notas       NotaFiscal[]
 
   @@index([alunoId])
   @@index([status])
@@ -78,12 +94,75 @@ model Mensalidade {
 
 // MOD-08 — Acesso (catraca)
 model Acesso {
-  id        String     @id @default(uuid())
-  aluno     Aluno      @relation(fields: [alunoId], references: [id])
-  alunoId   String
-  tipo      TipoAcesso
-  registro  DateTime   @default(now())
+  id       String     @id @default(uuid())
+  aluno    Aluno      @relation(fields: [alunoId], references: [id])
+  alunoId  String
+  tipo     TipoAcesso
+  registro DateTime   @default(now())
 
   @@index([alunoId])
   @@map("acessos")
+}
+
+// MOD-07 — Avaliação física (dado sensível — LGPD)
+model AvaliacaoFisica {
+  id                String   @id @default(uuid())
+  aluno             Aluno    @relation(fields: [alunoId], references: [id])
+  alunoId           String
+  data              DateTime @default(now())
+  pesoKg            Decimal? @db.Decimal(5, 2)
+  alturaCm          Int?
+  percentualGordura Decimal? @db.Decimal(5, 2)
+  massaMuscularKg   Decimal? @db.Decimal(5, 2)
+  observacoes       String?
+  criadoEm          DateTime @default(now())
+
+  @@index([alunoId])
+  @@map("avaliacoes_fisicas")
+}
+
+// MOD-06 — Treino
+model Treino {
+  id         String            @id @default(uuid())
+  nome       String
+  objetivo   String?
+  instrutor  String?
+  aluno      Aluno?            @relation(fields: [alunoId], references: [id])
+  alunoId    String?
+  criadoEm   DateTime          @default(now())
+  exercicios ExercicioTreino[]
+
+  @@index([alunoId])
+  @@map("treinos")
+}
+
+model ExercicioTreino {
+  id         String  @id @default(uuid())
+  treino     Treino  @relation(fields: [treinoId], references: [id], onDelete: Cascade)
+  treinoId   String
+  nome       String
+  series     Int?
+  repeticoes String?
+  cargaKg    Decimal? @db.Decimal(6, 2)
+
+  @@index([treinoId])
+  @@map("exercicios_treino")
+}
+
+// MOD-05 — Fiscal (NFS-e)
+model NotaFiscal {
+  id              String       @id @default(uuid())
+  aluno           Aluno        @relation(fields: [alunoId], references: [id])
+  alunoId         String
+  mensalidade     Mensalidade? @relation(fields: [mensalidadeId], references: [id])
+  mensalidadeId   String?
+  numero          String       @unique
+  protocolo       String
+  valor           Decimal      @db.Decimal(10, 2)
+  descricaoServico String
+  status          StatusNota   @default(EMITIDA)
+  emitidaEm       DateTime     @default(now())
+
+  @@index([alunoId])
+  @@map("notas_fiscais")
 }
