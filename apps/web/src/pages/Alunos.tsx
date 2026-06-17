@@ -4,6 +4,8 @@ import { apiDelete, apiGet, apiPatch, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
 import { Field, SelectField } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
+import { CameraCapture } from '../ui/CameraCapture';
+import { QrCode } from '../ui/QrCode';
 
 interface AlunoRow {
   id: string;
@@ -15,6 +17,8 @@ interface AlunoRow {
   dataMatricula?: string | null;
   planoId?: string | null;
   plano?: Plano | null;
+  fotoBase64?: string | null;
+  qrCode?: string | null;
 }
 
 interface FormState {
@@ -25,6 +29,7 @@ interface FormState {
   status: StatusAluno;
   dataMatricula: string;
   planoId: string;
+  fotoBase64: string;
 }
 
 const VAZIO: FormState = {
@@ -35,6 +40,7 @@ const VAZIO: FormState = {
   status: StatusAluno.ATIVO,
   dataMatricula: '',
   planoId: '',
+  fotoBase64: '',
 };
 
 const BADGE: Record<StatusAluno, string> = {
@@ -50,6 +56,7 @@ export default function Alunos() {
   const [planos, setPlanos] = useState<Plano[]>([]);
   const [form, setForm] = useState<FormState>(VAZIO);
   const [editId, setEditId] = useState<string | null>(null);
+  const [qrAtual, setQrAtual] = useState<string | null>(null);
   const [erro, setErro] = useState<string>();
   const [salvando, setSalvando] = useState(false);
 
@@ -73,11 +80,13 @@ export default function Alunos() {
   function limpar() {
     setForm(VAZIO);
     setEditId(null);
+    setQrAtual(null);
     setErro(undefined);
   }
 
   function editar(a: AlunoRow) {
     setEditId(a.id);
+    setQrAtual(a.qrCode ?? null);
     setErro(undefined);
     setForm({
       nome: a.nome,
@@ -87,6 +96,7 @@ export default function Alunos() {
       status: a.status,
       dataMatricula: a.dataMatricula ? a.dataMatricula.slice(0, 10) : '',
       planoId: a.planoId ?? '',
+      fotoBase64: a.fotoBase64 ?? '',
     });
   }
 
@@ -102,6 +112,7 @@ export default function Alunos() {
     if (form.telefone) payload.telefone = form.telefone;
     if (form.dataMatricula) payload.dataMatricula = form.dataMatricula;
     if (form.planoId) payload.planoId = form.planoId;
+    if (form.fotoBase64) payload.fotoBase64 = form.fotoBase64;
 
     try {
       if (editId) {
@@ -130,6 +141,15 @@ export default function Alunos() {
   }
 
   const colunas: Column<AlunoRow>[] = [
+    {
+      header: 'Foto',
+      render: (a) =>
+        a.fotoBase64 ? (
+          <img src={a.fotoBase64} alt={a.nome} className="checkin__foto" />
+        ) : (
+          '—'
+        ),
+    },
     { header: 'Nome', render: (a) => a.nome },
     { header: 'CPF/CNPJ', render: (a) => a.cpf },
     { header: 'Telefone', render: (a) => a.telefone ?? '—' },
@@ -214,6 +234,29 @@ export default function Alunos() {
             ))}
           </SelectField>
         </div>
+
+        <div className="crud__form-grid">
+          <div className="field">
+            <span className="field__label">Foto do aluno</span>
+            <CameraCapture
+              value={form.fotoBase64 || undefined}
+              onCapture={(dataUrl) => setForm((f) => ({ ...f, fotoBase64: dataUrl }))}
+              onClear={() => setForm((f) => ({ ...f, fotoBase64: '' }))}
+            />
+          </div>
+          {qrAtual && (
+            <div className="field">
+              <span className="field__label">QR code de acesso (catraca)</span>
+              <div className="qr-code">
+                <QrCode value={qrAtual} alt="QR code do aluno" />
+                <span className="qr-code__hint">
+                  Apresente este QR na catraca para registrar a entrada.
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="crud__actions">
           <Button onClick={salvar} disabled={salvando || !form.nome || !form.cpf}>
             {salvando ? 'Salvando…' : 'Salvar'}

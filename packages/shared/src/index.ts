@@ -49,6 +49,10 @@ export interface Aluno {
   status: StatusAluno;
   dataMatricula?: string;
   planoId?: string;
+  /** Foto do aluno (data URL base64) capturada no cadastro. */
+  fotoBase64?: string;
+  /** Token único codificado no QR code do aluno (lido pela catraca). */
+  qrCode?: string;
   criadoEm: string;
 }
 
@@ -105,6 +109,12 @@ export interface Acesso {
   alunoId: string;
   tipo: TipoAcesso;
   registro: string;
+}
+
+/** Resultado de um check-in/check-out feito pela catraca via leitura de QR code (MOD-08). */
+export interface ResultadoCheckin {
+  acesso: Acesso;
+  aluno: Pick<Aluno, 'id' | 'nome' | 'fotoBase64' | 'status'>;
 }
 
 export interface NotaFiscal {

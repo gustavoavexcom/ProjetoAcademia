@@ -44,6 +44,10 @@ model Aluno {
   telefone      String?
   status        StatusAluno      @default(ATIVO)
   dataMatricula DateTime?
+  // Foto capturada no cadastro (data URL base64) — identificação visual na recepção/catraca.
+  fotoBase64    String?
+  // Token único codificado no QR code do aluno. Lido pela catraca para confirmar o acesso.
+  qrCode        String?          @unique @default(uuid())
   plano         Plano?           @relation(fields: [planoId], references: [id])
   planoId       String?
   criadoEm      DateTime         @default(now())

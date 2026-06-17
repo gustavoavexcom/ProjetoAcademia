@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { TipoAcesso } from '@academia/shared';
+import { TipoAcesso, type ResultadoCheckin } from '@academia/shared';
 import { apiDelete, apiGet, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
 import { SelectField } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
+import { QrScanner } from '../ui/QrScanner';
 
 interface AlunoMin {
   id: string;
@@ -24,6 +25,10 @@ export default function Acesso() {
   const [acessos, setAcessos] = useState<AcessoRow[]>([]);
   const [alunoId, setAlunoId] = useState('');
   const [erro, setErro] = useState<string>();
+  const [tipoCatraca, setTipoCatraca] = useState<TipoAcesso>(TipoAcesso.ENTRADA);
+  const [processando, setProcessando] = useState(false);
+  const [resultado, setResultado] = useState<ResultadoCheckin | null>(null);
+  const [erroLeitura, setErroLeitura] = useState<string>();
 
   async function carregar() {
     try {
@@ -50,6 +55,27 @@ export default function Acesso() {
       await carregar();
     } catch (e) {
       setErro((e as Error).message);
+    }
+  }
+
+  /** Lê o QR do aluno e confirma o acesso na catraca. */
+  async function aoLerQr(qrCode: string) {
+    if (processando) return;
+    setProcessando(true);
+    setErroLeitura(undefined);
+    try {
+      const r = await apiPost<ResultadoCheckin>('/acessos/checkin', {
+        qrCode,
+        tipo: tipoCatraca,
+      });
+      setResultado(r);
+      await carregar();
+    } catch (e) {
+      setResultado(null);
+      setErroLeitura((e as Error).message);
+    } finally {
+      // Pequena pausa para o operador ver a confirmação antes da próxima leitura.
+      setTimeout(() => setProcessando(false), 2000);
     }
   }
 
@@ -88,7 +114,55 @@ export default function Acesso() {
     <div className="crud">
       <section className="crud__panel">
         <div className="crud__panel-head">
-          <h2>Catraca — registrar acesso</h2>
+          <h2>Catraca — leitura de QR code</h2>
+          <span className="crud__hint">
+            Use a câmera do notebook para ler o QR do aluno e confirmar o acesso.
+          </span>
+        </div>
+        <div className="crud__form-grid">
+          <SelectField
+            label="Tipo de registro"
+            value={tipoCatraca}
+            onChange={(e) => setTipoCatraca(e.target.value as TipoAcesso)}
+          >
+            <option value={TipoAcesso.ENTRADA}>Entrada</option>
+            <option value={TipoAcesso.SAIDA}>Saída</option>
+          </SelectField>
+        </div>
+        <QrScanner onScan={aoLerQr} paused={processando} />
+        {resultado && (
+          <div className="checkin" style={{ marginTop: 'var(--space-4)' }}>
+            {resultado.aluno.fotoBase64 ? (
+              <img
+                src={resultado.aluno.fotoBase64}
+                alt={resultado.aluno.nome}
+                className="checkin__foto"
+              />
+            ) : null}
+            <div>
+              <div className="checkin__nome">
+                {resultado.acesso.tipo === TipoAcesso.ENTRADA ? 'Entrada' : 'Saída'} confirmada —{' '}
+                {resultado.aluno.nome}
+              </div>
+              <div className="checkin__meta">
+                {dataHora(resultado.acesso.registro)} · situação: {resultado.aluno.status}
+              </div>
+            </div>
+          </div>
+        )}
+        {erroLeitura && (
+          <div className="checkin checkin--erro" style={{ marginTop: 'var(--space-4)' }}>
+            <div>
+              <div className="checkin__nome">QR não reconhecido</div>
+              <div className="checkin__meta">{erroLeitura}</div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="crud__panel">
+        <div className="crud__panel-head">
+          <h2>Catraca — registro manual</h2>
         </div>
         {erro && <div className="alert alert--error">{erro}</div>}
         <div className="crud__form-grid">

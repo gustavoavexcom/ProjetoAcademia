@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AcessosService } from './acessos.service';
 import { CreateAcessoDto } from './dto/create-acesso.dto';
+import { CheckinDto } from './dto/checkin.dto';
 
 @Controller('acessos')
 export class AcessosController {
@@ -17,6 +18,12 @@ export class AcessosController {
   @Post()
   registrar(@Body() dto: CreateAcessoDto) {
     return this.acessosService.registrar(dto);
+  }
+
+  /** Check-in/check-out pela catraca via leitura do QR code do aluno. */
+  @Post('checkin')
+  checkin(@Body() dto: CheckinDto) {
+    return this.acessosService.checkinPorQr(dto);
   }
 
   @Get()

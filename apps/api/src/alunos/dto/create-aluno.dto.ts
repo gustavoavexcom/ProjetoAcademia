@@ -42,4 +42,11 @@ export class CreateAlunoDto {
   @IsOptional()
   @IsUUID('all', { message: 'planoId inválido' })
   planoId?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^data:image\/(png|jpe?g|webp);base64,/, {
+    message: 'fotoBase64 deve ser uma data URL de imagem (base64)',
+  })
+  fotoBase64?: string;
 }
