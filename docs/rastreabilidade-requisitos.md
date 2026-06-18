@@ -4,7 +4,7 @@
 > Fonte da verdade dos requisitos: [`CLAUDE.md`](../CLAUDE.md).
 > Atualizar este documento sempre que um requisito, módulo ou caso de uso for adicionado/alterado/removido.
 
-**Última atualização:** 2026-06-17
+**Última atualização:** 2026-06-18
 
 ---
 
@@ -128,12 +128,12 @@ Entrega full-stack dos módulos do núcleo + Fiscal/Treino/Avaliação/Acesso. D
 
 | Módulo | RF | API | Tela | Status |
 |--------|----|-----|------|--------|
-| MOD-01 Aluno | RF-01 | `/api/alunos` (CRUD) | Alunos | ✅ Implementado |
+| MOD-01 Aluno | RF-01 | `/api/alunos` (CRUD + busca por CPF + endereço/CEP) | Alunos | ✅ Implementado |
 | MOD-03 Plano | RF-03, RF-09 | `/api/planos` (CRUD) + vínculo no aluno | Planos | ✅ Implementado |
 | MOD-04 Financeiro | RF-03, RF-04 | `/api/mensalidades` (gerar/pagar/inadimplentes) | Financeiro | ✅ Implementado |
 | MOD-05 Fiscal | RF-12 | `/api/notas` (emitir/consultar/cancelar) | Fiscal | ✅ Implementado (NFS-e simulada) |
 | MOD-06 Treino | RF-06 | `/api/treinos` (CRUD + atribuir) | Treinos | ✅ Implementado |
-| MOD-07 Avaliação Física | RF-07 | `/api/avaliacoes` (CRUD) | Treinos (seção) | ✅ Implementado |
+| MOD-07 Avaliação Física | RF-07 | `/api/avaliacoes` (CRUD + objetivo) · `/api/recomendacoes` (IMC + base curada) | Avaliação & Recomendação | ✅ Implementado |
 | MOD-08 Acesso | RF-05 | `/api/acessos` (registrar/histórico) | Acesso | ✅ Implementado |
 | MOD-02 Funcionários | RF-02 | — | — | ⏳ Pendente |
 | MOD-09 Agendamento | RF-08 | — | — | ⏳ Pendente |
@@ -142,3 +142,16 @@ Entrega full-stack dos módulos do núcleo + Fiscal/Treino/Avaliação/Acesso. D
 
 **Importação de dados:** 100 registros de `historico_academia.csv` normalizados → 66 alunos
 (34 duplicados de CPF/CNPJ ignorados) e 13 planos distintos (seed em `apps/api/prisma/seed.ts`).
+
+### Evolução 2026-06-18 — Avaliação física com IMC e recomendação (MOD-01 / MOD-07)
+
+- **Busca por CPF** (`GET /api/alunos/cpf/:cpf`): o instrutor digita o CPF e o cadastro do aluno é
+  localizado para iniciar a avaliação.
+- **Endereço + ViaCEP** (MOD-01): novos campos `cep, logradouro, numero, bairro, cidade, uf` no aluno,
+  autopreenchidos pela API pública ViaCEP ao digitar o CEP no cadastro.
+- **Objetivo de treino** (`ObjetivoTreino`: força superior / força inferior / abdômen definido) gravado
+  na avaliação física.
+- **IMC + recomendação** (`POST /api/recomendacoes`): cálculo de IMC (faixas OMS) e base curada de
+  exercícios, alimentação e suplementos por objetivo, com ajuste por faixa de IMC.
+- **Nova tela** "Avaliação & Recomendação": busca por CPF + abas (avaliação física com IMC ao vivo /
+  recomendação / histórico). A avaliação física saiu da tela de Treinos.

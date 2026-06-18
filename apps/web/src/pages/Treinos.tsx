@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiDelete, apiGet, apiPatch, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
-import { Field, SelectField, TextAreaField } from '../ui/Form';
+import { Field, SelectField } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
 
 interface AlunoMin {
@@ -26,22 +26,9 @@ interface TreinoRow {
   exercicios?: { id: string; nome: string }[];
 }
 
-interface AvaliacaoRow {
-  id: string;
-  data: string;
-  pesoKg?: string | null;
-  alturaCm?: number | null;
-  percentualGordura?: string | null;
-  observacoes?: string | null;
-  aluno?: { nome: string };
-}
-
-const dataBr = (iso: string) => new Date(iso).toLocaleDateString('pt-BR');
-
 export default function Treinos() {
   const [alunos, setAlunos] = useState<AlunoMin[]>([]);
   const [treinos, setTreinos] = useState<TreinoRow[]>([]);
-  const [avaliacoes, setAvaliacoes] = useState<AvaliacaoRow[]>([]);
   const [erro, setErro] = useState<string>();
 
   // --- Formulário de treino ---
@@ -52,24 +39,14 @@ export default function Treinos() {
   const [exercicios, setExercicios] = useState<ExercicioForm[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
 
-  // --- Formulário de avaliação ---
-  const [avAluno, setAvAluno] = useState('');
-  const [avData, setAvData] = useState('');
-  const [avPeso, setAvPeso] = useState('');
-  const [avAltura, setAvAltura] = useState('');
-  const [avGordura, setAvGordura] = useState('');
-  const [avObs, setAvObs] = useState('');
-
   async function carregar() {
     try {
-      const [t, a, av] = await Promise.all([
+      const [t, a] = await Promise.all([
         apiGet<TreinoRow[]>('/treinos'),
         apiGet<AlunoMin[]>('/alunos'),
-        apiGet<AvaliacaoRow[]>('/avaliacoes'),
       ]);
       setTreinos(t);
       setAlunos(a);
-      setAvaliacoes(av);
     } catch (e) {
       setErro((e as Error).message);
     }
@@ -149,38 +126,6 @@ export default function Treinos() {
     }
   }
 
-  async function salvarAvaliacao() {
-    setErro(undefined);
-    const payload: Record<string, unknown> = { alunoId: avAluno };
-    if (avData) payload.data = avData;
-    if (avPeso) payload.pesoKg = Number(avPeso);
-    if (avAltura) payload.alturaCm = Number(avAltura);
-    if (avGordura) payload.percentualGordura = Number(avGordura);
-    if (avObs) payload.observacoes = avObs;
-    try {
-      await apiPost('/avaliacoes', payload);
-      setAvAluno('');
-      setAvData('');
-      setAvPeso('');
-      setAvAltura('');
-      setAvGordura('');
-      setAvObs('');
-      await carregar();
-    } catch (e) {
-      setErro((e as Error).message);
-    }
-  }
-
-  async function excluirAvaliacao(id: string) {
-    if (!confirm('Excluir esta avaliação?')) return;
-    try {
-      await apiDelete(`/avaliacoes/${id}`);
-      await carregar();
-    } catch (e) {
-      setErro((e as Error).message);
-    }
-  }
-
   const colTreinos: Column<TreinoRow>[] = [
     { header: 'Treino', render: (t) => t.nome },
     { header: 'Objetivo', render: (t) => t.objetivo ?? '—' },
@@ -198,22 +143,6 @@ export default function Treinos() {
             Excluir
           </Button>
         </div>
-      ),
-    },
-  ];
-
-  const colAval: Column<AvaliacaoRow>[] = [
-    { header: 'Aluno', render: (a) => a.aluno?.nome ?? '—' },
-    { header: 'Data', render: (a) => dataBr(a.data) },
-    { header: 'Peso (kg)', render: (a) => (a.pesoKg ? Number(a.pesoKg) : '—') },
-    { header: 'Altura (cm)', render: (a) => a.alturaCm ?? '—' },
-    { header: '% Gordura', render: (a) => (a.percentualGordura ? Number(a.percentualGordura) : '—') },
-    {
-      header: 'Ações',
-      render: (a) => (
-        <Button variant="danger" size="sm" onClick={() => excluirAvaliacao(a.id)}>
-          Excluir
-        </Button>
       ),
     },
   ];
@@ -294,41 +223,6 @@ export default function Treinos() {
           <span className="crud__hint">{treinos.length} registro(s)</span>
         </div>
         <DataTable columns={colTreinos} rows={treinos} empty="Nenhum treino cadastrado." />
-      </section>
-
-      <section className="crud__panel">
-        <div className="crud__panel-head">
-          <h2>Registrar avaliação física</h2>
-          <span className="crud__hint">Dado sensível (LGPD)</span>
-        </div>
-        <div className="crud__form-grid">
-          <SelectField label="Aluno" value={avAluno} onChange={(e) => setAvAluno(e.target.value)}>
-            <option value="">— selecione —</option>
-            {alunos.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.nome}
-              </option>
-            ))}
-          </SelectField>
-          <Field label="Data" type="date" value={avData} onChange={(e) => setAvData(e.target.value)} />
-          <Field label="Peso (kg)" type="number" step="0.1" value={avPeso} onChange={(e) => setAvPeso(e.target.value)} />
-          <Field label="Altura (cm)" type="number" value={avAltura} onChange={(e) => setAvAltura(e.target.value)} />
-          <Field label="% Gordura" type="number" step="0.1" value={avGordura} onChange={(e) => setAvGordura(e.target.value)} />
-          <TextAreaField label="Observações" value={avObs} onChange={(e) => setAvObs(e.target.value)} />
-        </div>
-        <div className="crud__actions">
-          <Button onClick={salvarAvaliacao} disabled={!avAluno}>
-            Salvar avaliação
-          </Button>
-        </div>
-      </section>
-
-      <section className="crud__panel">
-        <div className="crud__panel-head">
-          <h2>Avaliações físicas</h2>
-          <span className="crud__hint">{avaliacoes.length} registro(s)</span>
-        </div>
-        <DataTable columns={colAval} rows={avaliacoes} empty="Nenhuma avaliação registrada." />
       </section>
     </div>
   );

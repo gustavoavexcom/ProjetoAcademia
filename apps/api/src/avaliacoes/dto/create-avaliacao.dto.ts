@@ -1,5 +1,6 @@
 import {
   IsDateString,
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   IsUUID,
   Min,
 } from 'class-validator';
+import { ObjetivoTreino } from '@academia/shared';
 
 export class CreateAvaliacaoDto {
   @IsUUID('all', { message: 'alunoId inválido' })
@@ -35,6 +37,10 @@ export class CreateAvaliacaoDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   massaMuscularKg?: number;
+
+  @IsOptional()
+  @IsEnum(ObjetivoTreino, { message: 'objetivo inválido' })
+  objetivo?: ObjetivoTreino;
 
   @IsOptional()
   @IsString()

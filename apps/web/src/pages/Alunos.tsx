@@ -17,6 +17,12 @@ interface AlunoRow {
   dataMatricula?: string | null;
   planoId?: string | null;
   plano?: Plano | null;
+  cep?: string | null;
+  logradouro?: string | null;
+  numero?: string | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  uf?: string | null;
   fotoBase64?: string | null;
   qrCode?: string | null;
 }
@@ -29,6 +35,12 @@ interface FormState {
   status: StatusAluno;
   dataMatricula: string;
   planoId: string;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
   fotoBase64: string;
 }
 
@@ -40,6 +52,12 @@ const VAZIO: FormState = {
   status: StatusAluno.ATIVO,
   dataMatricula: '',
   planoId: '',
+  cep: '',
+  logradouro: '',
+  numero: '',
+  bairro: '',
+  cidade: '',
+  uf: '',
   fotoBase64: '',
 };
 
@@ -59,6 +77,39 @@ export default function Alunos() {
   const [qrAtual, setQrAtual] = useState<string | null>(null);
   const [erro, setErro] = useState<string>();
   const [salvando, setSalvando] = useState(false);
+  const [buscandoCep, setBuscandoCep] = useState(false);
+
+  /** Autopreenche o endereço pela API pública ViaCEP ao sair do campo CEP. */
+  async function buscarCep(cep: string) {
+    const cepLimpo = cep.replace(/\D/g, '');
+    if (cepLimpo.length !== 8) return;
+    setBuscandoCep(true);
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+      const dados = (await res.json()) as {
+        logradouro?: string;
+        bairro?: string;
+        localidade?: string;
+        uf?: string;
+        erro?: boolean;
+      };
+      if (dados.erro) {
+        setErro('CEP não encontrado.');
+        return;
+      }
+      setForm((f) => ({
+        ...f,
+        logradouro: dados.logradouro ?? f.logradouro,
+        bairro: dados.bairro ?? f.bairro,
+        cidade: dados.localidade ?? f.cidade,
+        uf: dados.uf ?? f.uf,
+      }));
+    } catch {
+      setErro('Não foi possível consultar o CEP (verifique a conexão).');
+    } finally {
+      setBuscandoCep(false);
+    }
+  }
 
   async function carregar() {
     try {
@@ -96,6 +147,12 @@ export default function Alunos() {
       status: a.status,
       dataMatricula: a.dataMatricula ? a.dataMatricula.slice(0, 10) : '',
       planoId: a.planoId ?? '',
+      cep: a.cep ?? '',
+      logradouro: a.logradouro ?? '',
+      numero: a.numero ?? '',
+      bairro: a.bairro ?? '',
+      cidade: a.cidade ?? '',
+      uf: a.uf ?? '',
       fotoBase64: a.fotoBase64 ?? '',
     });
   }
@@ -112,6 +169,12 @@ export default function Alunos() {
     if (form.telefone) payload.telefone = form.telefone;
     if (form.dataMatricula) payload.dataMatricula = form.dataMatricula;
     if (form.planoId) payload.planoId = form.planoId;
+    if (form.cep) payload.cep = form.cep.replace(/\D/g, '');
+    if (form.logradouro) payload.logradouro = form.logradouro;
+    if (form.numero) payload.numero = form.numero;
+    if (form.bairro) payload.bairro = form.bairro;
+    if (form.cidade) payload.cidade = form.cidade;
+    if (form.uf) payload.uf = form.uf.toUpperCase();
     if (form.fotoBase64) payload.fotoBase64 = form.fotoBase64;
 
     try {
@@ -233,6 +296,45 @@ export default function Alunos() {
               </option>
             ))}
           </SelectField>
+        </div>
+
+        <div className="crud__panel-head">
+          <h2 style={{ fontSize: '0.95rem' }}>Endereço</h2>
+          {buscandoCep && <span className="crud__hint">Buscando CEP…</span>}
+        </div>
+        <div className="crud__form-grid">
+          <Field
+            label="CEP"
+            value={form.cep}
+            onChange={(e) => setForm({ ...form, cep: e.target.value })}
+            onBlur={(e) => buscarCep(e.target.value)}
+          />
+          <Field
+            label="Logradouro"
+            value={form.logradouro}
+            onChange={(e) => setForm({ ...form, logradouro: e.target.value })}
+          />
+          <Field
+            label="Número"
+            value={form.numero}
+            onChange={(e) => setForm({ ...form, numero: e.target.value })}
+          />
+          <Field
+            label="Bairro"
+            value={form.bairro}
+            onChange={(e) => setForm({ ...form, bairro: e.target.value })}
+          />
+          <Field
+            label="Cidade"
+            value={form.cidade}
+            onChange={(e) => setForm({ ...form, cidade: e.target.value })}
+          />
+          <Field
+            label="UF"
+            maxLength={2}
+            value={form.uf}
+            onChange={(e) => setForm({ ...form, uf: e.target.value.toUpperCase() })}
+          />
         </div>
 
         <div className="crud__form-grid">

@@ -35,6 +35,13 @@ enum StatusNota {
   CANCELADA
 }
 
+// MOD-07 — Objetivo de treino escolhido na avaliação física
+enum ObjetivoTreino {
+  FORCA_SUPERIOR
+  FORCA_INFERIOR
+  ABDOMEN_DEFINIDO
+}
+
 // MOD-01 — Aluno
 model Aluno {
   id            String           @id @default(uuid())
@@ -44,6 +51,13 @@ model Aluno {
   telefone      String?
   status        StatusAluno      @default(ATIVO)
   dataMatricula DateTime?
+  // Endereço (autopreenchido via ViaCEP a partir do CEP). Campos opcionais.
+  cep           String?
+  logradouro    String?
+  numero        String?
+  bairro        String?
+  cidade        String?
+  uf            String?
   // Foto capturada no cadastro (data URL base64) — identificação visual na recepção/catraca.
   fotoBase64    String?
   // Token único codificado no QR code do aluno. Lido pela catraca para confirmar o acesso.
@@ -118,6 +132,8 @@ model AvaliacaoFisica {
   alturaCm          Int?
   percentualGordura Decimal? @db.Decimal(5, 2)
   massaMuscularKg   Decimal? @db.Decimal(5, 2)
+  // Objetivo de treino definido pelo instrutor (direciona a recomendação).
+  objetivo          ObjetivoTreino?
   observacoes       String?
   criadoEm          DateTime @default(now())
 

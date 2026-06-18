@@ -314,3 +314,74 @@
   border-color: var(--brand-blue);
   color: #fff;
 }
+
+/* ----- Avaliação & recomendação ----- */
+/* Card com os dados do aluno localizado pelo CPF */
+.aluno-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--brand-blue-50);
+}
+.aluno-card__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.aluno-card__label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+.aluno-card__valor {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Destaque do IMC calculado */
+.imc-box {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  margin-bottom: var(--space-4);
+}
+.imc-box__valor {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--brand-blue);
+}
+.imc-box__class {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Grade das três listas de recomendação */
+.reco-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
+}
+.reco-list h3 {
+  font-size: 0.9rem;
+  margin-bottom: var(--space-2);
+  color: var(--brand-blue);
+}
+.reco-list ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.reco-list li {
+  font-size: 0.85rem;
+  color: var(--text);
+}

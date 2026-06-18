@@ -36,6 +36,26 @@ export enum StatusNota {
   CANCELADA = 'CANCELADA',
 }
 
+/**
+ * Objetivo de treino escolhido na avaliação física (MOD-07). Direciona a base
+ * recomendada de exercícios, alimentação e suplementos.
+ */
+export enum ObjetivoTreino {
+  /** Mais forte em cima — ênfase em membros superiores. */
+  FORCA_SUPERIOR = 'FORCA_SUPERIOR',
+  /** Mais forte embaixo — ênfase em membros inferiores. */
+  FORCA_INFERIOR = 'FORCA_INFERIOR',
+  /** Abdômen definido — ênfase em core e definição. */
+  ABDOMEN_DEFINIDO = 'ABDOMEN_DEFINIDO',
+}
+
+/** Rótulos amigáveis dos objetivos de treino (para selects/relatórios). */
+export const OBJETIVO_TREINO_ROTULOS: Record<ObjetivoTreino, string> = {
+  [ObjetivoTreino.FORCA_SUPERIOR]: 'Mais forte em cima — membros superiores',
+  [ObjetivoTreino.FORCA_INFERIOR]: 'Mais forte embaixo — membros inferiores',
+  [ObjetivoTreino.ABDOMEN_DEFINIDO]: 'Abdômen definido',
+};
+
 // ----------------------------------------------------------------------------
 // Contratos de entidade (DTOs base — refinar conforme o schema Prisma evolui)
 // ----------------------------------------------------------------------------
@@ -49,6 +69,18 @@ export interface Aluno {
   status: StatusAluno;
   dataMatricula?: string;
   planoId?: string;
+  /** CEP do aluno (somente dígitos ou formatado). */
+  cep?: string;
+  /** Logradouro (rua/avenida) — autopreenchido via ViaCEP. */
+  logradouro?: string;
+  /** Número do endereço. */
+  numero?: string;
+  /** Bairro — autopreenchido via ViaCEP. */
+  bairro?: string;
+  /** Cidade — autopreenchido via ViaCEP. */
+  cidade?: string;
+  /** Unidade federativa (sigla, 2 letras) — autopreenchido via ViaCEP. */
+  uf?: string;
   /** Foto do aluno (data URL base64) capturada no cadastro. */
   fotoBase64?: string;
   /** Token único codificado no QR code do aluno (lido pela catraca). */
@@ -83,6 +115,8 @@ export interface AvaliacaoFisica {
   alturaCm?: number;
   percentualGordura?: number;
   massaMuscularKg?: number;
+  /** Objetivo de treino definido pelo instrutor nesta avaliação. */
+  objetivo?: ObjetivoTreino;
   observacoes?: string;
 }
 
@@ -127,6 +161,28 @@ export interface NotaFiscal {
   descricaoServico: string;
   status: StatusNota;
   emitidaEm: string;
+}
+
+// ----------------------------------------------------------------------------
+// IMC e recomendação (MOD-07)
+// ----------------------------------------------------------------------------
+
+/** Resultado do cálculo de IMC (Índice de Massa Corporal). */
+export interface ResultadoImc {
+  /** Valor do IMC arredondado a 1 casa decimal. */
+  valor: number;
+  /** Classificação OMS (ex.: "Peso normal", "Sobrepeso", "Obesidade"). */
+  classificacao: string;
+}
+
+/** Recomendação curada de exercícios, alimentação e suplementos por objetivo. */
+export interface Recomendacao {
+  /** IMC calculado a partir de peso/altura informados (null se faltar dado). */
+  imc: ResultadoImc | null;
+  objetivo: ObjetivoTreino;
+  exercicios: string[];
+  alimentacao: string[];
+  suplementos: string[];
 }
 
 // ----------------------------------------------------------------------------

@@ -9,6 +9,7 @@ import Planos from './pages/Planos';
 import Financeiro from './pages/Financeiro';
 import Fiscal from './pages/Fiscal';
 import Treinos from './pages/Treinos';
+import Avaliacao from './pages/Avaliacao';
 import Acesso from './pages/Acesso';
 
 // Mapa de roteamento por estado (sem react-router). Módulos sem página dedicada
@@ -20,6 +21,7 @@ const PAGINAS: Partial<Record<NavKey, ComponentType>> = {
   financeiro: Financeiro,
   fiscal: Fiscal,
   treinos: Treinos,
+  avaliacao: Avaliacao,
   acesso: Acesso,
 };
 

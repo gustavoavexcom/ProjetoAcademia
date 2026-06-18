@@ -25,6 +25,12 @@ export class AlunosController {
     return this.alunosService.findAll();
   }
 
+  // Rota declarada antes de ':id' por clareza (não há conflito de profundidade).
+  @Get('cpf/:cpf')
+  findByCpf(@Param('cpf') cpf: string) {
+    return this.alunosService.findByCpf(cpf);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.alunosService.findOne(id);

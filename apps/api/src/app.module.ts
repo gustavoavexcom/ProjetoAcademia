@@ -10,6 +10,7 @@ import { NotasModule } from './notas/notas.module';
 import { TreinosModule } from './treinos/treinos.module';
 import { AvaliacoesModule } from './avaliacoes/avaliacoes.module';
 import { AcessosModule } from './acessos/acessos.module';
+import { RecomendacoesModule } from './recomendacoes/recomendacoes.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AcessosModule } from './acessos/acessos.module';
     TreinosModule,
     AvaliacoesModule,
     AcessosModule,
+    RecomendacoesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -34,6 +34,22 @@ export class AlunosService {
     return aluno;
   }
 
+  /**
+   * Busca um aluno pelo CPF (somente dígitos são considerados). Usado no fluxo
+   * de avaliação física, em que o instrutor digita o CPF para localizar o aluno.
+   */
+  async findByCpf(cpf: string) {
+    const cpfLimpo = (cpf ?? '').replace(/\D/g, '');
+    const aluno = await this.prisma.aluno.findUnique({
+      where: { cpf: cpfLimpo },
+      include: { plano: true },
+    });
+    if (!aluno) {
+      throw new NotFoundException(`Aluno com CPF ${cpfLimpo} não encontrado`);
+    }
+    return aluno;
+  }
+
   async update(id: string, dto: UpdateAlunoDto) {
     await this.findOne(id);
     try {

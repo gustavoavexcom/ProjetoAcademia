@@ -45,6 +45,32 @@ export class CreateAlunoDto {
 
   @IsOptional()
   @IsString()
+  @Length(8, 9, { message: 'cep deve ter 8 dígitos (com ou sem hífen)' })
+  cep?: string;
+
+  @IsOptional()
+  @IsString()
+  logradouro?: string;
+
+  @IsOptional()
+  @IsString()
+  numero?: string;
+
+  @IsOptional()
+  @IsString()
+  bairro?: string;
+
+  @IsOptional()
+  @IsString()
+  cidade?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(2, 2, { message: 'uf deve ter 2 letras' })
+  uf?: string;
+
+  @IsOptional()
+  @IsString()
   @Matches(/^data:image\/(png|jpe?g|webp);base64,/, {
     message: 'fotoBase64 deve ser uma data URL de imagem (base64)',
   })
