@@ -175,7 +175,9 @@ export default function Alunos() {
     };
     if (form.email) payload.email = form.email;
     if (form.telefone) payload.telefone = form.telefone;
-    if (form.dataMatricula) payload.dataMatricula = form.dataMatricula;
+    // Prisma (DateTime) exige ISO completo; o input date entrega só AAAA-MM-DD.
+    if (form.dataMatricula)
+      payload.dataMatricula = new Date(`${form.dataMatricula}T00:00:00`).toISOString();
     if (form.planoId) payload.planoId = form.planoId;
     // Prisma (DateTime) exige ISO completo; o input date entrega só AAAA-MM-DD.
     if (form.vencimentoPlano)

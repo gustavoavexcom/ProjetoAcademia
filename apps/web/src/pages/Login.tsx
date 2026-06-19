@@ -27,9 +27,13 @@ export default function Login({ onLogin }: LoginProps) {
 
   return (
     <div className="login">
+      <div className="login__motto" aria-hidden="true">
+        <span>Persistência</span>
+        <span>Foco</span>
+      </div>
       <form className="login__card" onSubmit={handleSubmit}>
-        <img src={logo} alt="Pro Ativa Gutha" className="login__logo" />
-        <h1 className="login__title">Pro Ativa</h1>
+        <img src={logo} alt="Pró Ativa" className="login__logo" />
+        <h1 className="login__title">Pró Ativa</h1>
         <p className="login__subtitle">Acesso da Recepção</p>
 
         <label className="login__field">

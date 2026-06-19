@@ -10,7 +10,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    // Limite de corpo elevado (padrão Fastify é 1 MB) para acomodar a foto do
+    // aluno enviada como data URL base64 no cadastro/edição.
+    new FastifyAdapter({ bodyLimit: 10 * 1024 * 1024 }),
   );
   app.setGlobalPrefix(API_PREFIX);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));

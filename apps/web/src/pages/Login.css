@@ -1,12 +1,41 @@
+/* Tela principal (Login) — identidade Pró Ativa: fundo preto, marca em preto + laranja.
+   Frase-conceito "Persistência · Foco · Disciplina" como marca d'água no fundo. */
 .login {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 100vh;
   padding: var(--space-6);
-  background: var(--surface-alt, #0f172a);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(245, 130, 31, 0.16), transparent 55%),
+    #000;
+}
+
+/* Frase de fundo (marca d'água): "Persistência" em cima, "Foco" embaixo. */
+.login__motto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(2rem, 9vw, 6.5rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(245, 130, 31, 0.06);
+  user-select: none;
+  pointer-events: none;
 }
 
 .login__card {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,10 +43,10 @@
   width: 100%;
   max-width: 360px;
   padding: var(--space-6);
-  background: var(--surface, #fff);
-  border: 1px solid var(--border, #e2e8f0);
-  border-radius: var(--radius, 14px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  background: #111111;
+  border: 1px solid rgba(245, 130, 31, 0.35);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
 }
 
 .login__logo {
@@ -29,13 +58,23 @@
 
 .login__title {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+.login__title::first-letter {
+  color: var(--brand-orange, #f5821f);
 }
 
 .login__subtitle {
   margin: 0 0 var(--space-3);
-  color: var(--text-muted, #64748b);
-  font-size: 0.9rem;
+  color: var(--brand-orange, #f5821f);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .login__field {
@@ -45,30 +84,36 @@
   width: 100%;
   font-size: 0.85rem;
   font-weight: 600;
+  color: #d4d4d4;
 }
 
 .login__field input {
   padding: 0.6rem 0.75rem;
   font: inherit;
   font-weight: 400;
-  border: 1px solid var(--border, #e2e8f0);
-  border-radius: var(--radius-sm, 8px);
-  background: var(--surface-alt, #f8fafc);
-  color: var(--text, #0f172a);
+  border: 1px solid #2a2a2a;
+  border-radius: var(--radius-sm, 6px);
+  background: #1c1c1c;
+  color: #f5f5f5;
   outline: none;
 }
 
+.login__field input::placeholder {
+  color: #6b6b6b;
+}
+
 .login__field input:focus {
-  border-color: var(--brand-blue, #2563eb);
+  border-color: var(--brand-orange, #f5821f);
+  box-shadow: 0 0 0 3px rgba(245, 130, 31, 0.18);
 }
 
 .login__error {
   width: 100%;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm, 8px);
-  background: var(--danger-bg, #fee2e2);
-  color: var(--danger, #dc2626);
+  border-radius: var(--radius-sm, 6px);
+  background: rgba(207, 34, 46, 0.15);
+  color: #ff6b6b;
   font-size: 0.82rem;
   font-weight: 600;
 }
@@ -78,14 +123,16 @@
   margin-top: var(--space-2);
   padding: 0.7rem;
   border: 0;
-  border-radius: var(--radius-sm, 8px);
-  background: var(--brand-blue, #2563eb);
-  color: #fff;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--brand-orange, #f5821f);
+  color: #111111;
   font: inherit;
-  font-weight: 700;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   cursor: pointer;
 }
 
 .login__submit:hover {
-  filter: brightness(1.05);
+  background: var(--brand-orange-600, #d96f12);
 }

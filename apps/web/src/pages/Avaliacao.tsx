@@ -6,7 +6,7 @@ import {
 } from '@academia/shared';
 import { apiGet, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
-import { Field, SelectField, TextAreaField } from '../ui/Form';
+import { AutocompleteField, Field, SelectField, TextAreaField } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
 
 interface AlunoEncontrado {
@@ -56,8 +56,9 @@ export default function Avaliacao() {
   const [erro, setErro] = useState<string>();
   const [ok, setOk] = useState<string>();
 
-  // Busca por CPF
-  const [cpf, setCpf] = useState('');
+  // Busca por nome (com autocomplete dos alunos cadastrados)
+  const [alunosLista, setAlunosLista] = useState<AlunoEncontrado[]>([]);
+  const [nomeBusca, setNomeBusca] = useState('');
   const [aluno, setAluno] = useState<AlunoEncontrado | null>(null);
   const [buscando, setBuscando] = useState(false);
 
@@ -80,6 +81,10 @@ export default function Avaliacao() {
     apiGet<ObjetivoOpcao[]>('/recomendacoes/objetivos')
       .then(setObjetivos)
       .catch((e) => setErro((e as Error).message));
+    // Carrega os alunos cadastrados para alimentar o autocomplete por nome.
+    apiGet<AlunoEncontrado[]>('/alunos')
+      .then(setAlunosLista)
+      .catch((e) => setErro((e as Error).message));
   }, []);
 
   async function carregarHistorico(alunoId: string) {
@@ -92,20 +97,26 @@ export default function Avaliacao() {
   }
 
   async function buscar() {
-    const cpfLimpo = cpf.replace(/\D/g, '');
-    if (!cpfLimpo) return;
+    const alvo = nomeBusca.trim().toLowerCase();
+    if (!alvo) return;
     setBuscando(true);
     setErro(undefined);
     setOk(undefined);
     setReco(null);
+    // Casamento exato pelo nome; se não houver, tenta o primeiro que contém o texto.
+    const encontrado =
+      alunosLista.find((a) => a.nome.toLowerCase() === alvo) ??
+      alunosLista.find((a) => a.nome.toLowerCase().includes(alvo));
     try {
-      const a = await apiGet<AlunoEncontrado>(`/alunos/cpf/${cpfLimpo}`);
-      setAluno(a);
-      await carregarHistorico(a.id);
-    } catch (e) {
-      setAluno(null);
-      setHistorico([]);
-      setErro((e as Error).message);
+      if (!encontrado) {
+        setAluno(null);
+        setHistorico([]);
+        setErro('Nenhum aluno cadastrado com esse nome.');
+        return;
+      }
+      setAluno(encontrado);
+      setNomeBusca(encontrado.nome);
+      await carregarHistorico(encontrado.id);
     } finally {
       setBuscando(false);
     }
@@ -178,21 +189,23 @@ export default function Avaliacao() {
 
       <section className="crud__panel">
         <div className="crud__panel-head">
-          <h2>Localizar aluno por CPF</h2>
+          <h2>Localizar aluno por nome</h2>
           <span className="crud__hint">Dado sensível (LGPD)</span>
         </div>
         <div className="crud__form-grid">
-          <Field
-            label="CPF do aluno"
-            value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
+          <AutocompleteField
+            label="Nome do aluno"
+            options={alunosLista.map((a) => a.nome)}
+            value={nomeBusca}
+            placeholder="Digite parte do nome (ex.: gu → Gustavo)"
+            onChange={(e) => setNomeBusca(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') buscar();
             }}
           />
         </div>
         <div className="crud__actions">
-          <Button onClick={buscar} disabled={buscando || !cpf}>
+          <Button onClick={buscar} disabled={buscando || !nomeBusca.trim()}>
             {buscando ? 'Buscando…' : 'Buscar'}
           </Button>
         </div>
