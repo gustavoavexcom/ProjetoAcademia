@@ -238,7 +238,8 @@ export default function Alunos() {
     {
       header: 'Ações',
       render: (a) => (
-        <div className="crud__actions">
+        // stopPropagation: os botões não devem disparar o clique de edição da linha.
+        <div className="crud__actions" onClick={(e) => e.stopPropagation()}>
           <Button variant="secondary" size="sm" onClick={() => editar(a)}>
             Editar
           </Button>
@@ -406,7 +407,12 @@ export default function Alunos() {
           <h2>Alunos cadastrados</h2>
           <span className="crud__hint">{alunos.length} registro(s)</span>
         </div>
-        <DataTable columns={colunas} rows={alunos} empty="Nenhum aluno cadastrado." />
+        <DataTable
+          columns={colunas}
+          rows={alunos}
+          empty="Nenhum aluno cadastrado."
+          onRowClick={editar}
+        />
       </section>
     </div>
   );

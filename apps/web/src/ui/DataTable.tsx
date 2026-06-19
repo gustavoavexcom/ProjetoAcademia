@@ -10,6 +10,8 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   rows: T[];
   empty?: string;
+  /** Ação ao clicar na linha (ex.: abrir o registro para edição). */
+  onRowClick?: (row: T) => void;
 }
 
 /** Tabela genérica reutilizada por todas as telas de listagem. */
@@ -17,6 +19,7 @@ export function DataTable<T extends { id: string }>({
   columns,
   rows,
   empty = 'Nenhum registro encontrado.',
+  onRowClick,
 }: DataTableProps<T>) {
   return (
     <div className="table-wrap">
@@ -37,7 +40,11 @@ export function DataTable<T extends { id: string }>({
             </tr>
           ) : (
             rows.map((row) => (
-              <tr key={row.id}>
+              <tr
+                key={row.id}
+                className={onRowClick ? 'table__row--clickable' : undefined}
+                onClick={onRowClick ? () => onRowClick(row) : undefined}
+              >
                 {columns.map((c) => (
                   <td key={c.header}>{c.render(row)}</td>
                 ))}
