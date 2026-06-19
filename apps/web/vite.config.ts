@@ -48,4 +48,10 @@ export default defineConfig({
       '/api': 'http://localhost:3000',
     },
   },
+  preview: {
+    // Em produção (Railway), o `vite preview` serve o build estático. Desde o
+    // Vite 5.4 ele bloqueia hosts desconhecidos por segurança; libera os
+    // domínios do Railway (gerados e custom) para o app responder atrás do proxy.
+    allowedHosts: ['.up.railway.app', '.railway.app'],
+  },
 });
