@@ -50,6 +50,25 @@ export class AlunosService {
     return aluno;
   }
 
+  /**
+   * Busca um aluno pelo número de matrícula. Usado no check-in da catraca quando
+   * o aluno não traz o QR code: o atendente digita a matrícula e confirma a foto.
+   */
+  async findByMatricula(matricula: string) {
+    const numero = Number(matricula);
+    if (!Number.isInteger(numero) || numero <= 0) {
+      throw new NotFoundException(`Matrícula ${matricula} inválida`);
+    }
+    const aluno = await this.prisma.aluno.findUnique({
+      where: { matricula: numero },
+      include: { plano: true },
+    });
+    if (!aluno) {
+      throw new NotFoundException(`Aluno com matrícula ${numero} não encontrado`);
+    }
+    return aluno;
+  }
+
   async update(id: string, dto: UpdateAlunoDto) {
     await this.findOne(id);
     try {

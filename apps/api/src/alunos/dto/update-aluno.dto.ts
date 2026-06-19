@@ -47,6 +47,10 @@ export class UpdateAlunoDto {
   planoId?: string;
 
   @IsOptional()
+  @IsDateString({}, { message: 'vencimentoPlano deve ser uma data válida (ISO)' })
+  vencimentoPlano?: string;
+
+  @IsOptional()
   @IsString()
   @Matches(/^data:image\/(png|jpe?g|webp);base64,/, {
     message: 'fotoBase64 deve ser uma data URL de imagem (base64)',

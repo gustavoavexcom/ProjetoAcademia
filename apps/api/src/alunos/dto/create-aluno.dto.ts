@@ -44,6 +44,10 @@ export class CreateAlunoDto {
   planoId?: string;
 
   @IsOptional()
+  @IsDateString({}, { message: 'vencimentoPlano deve ser uma data válida (ISO)' })
+  vencimentoPlano?: string;
+
+  @IsOptional()
   @IsString()
   @Length(8, 9, { message: 'cep deve ter 8 dígitos (com ou sem hífen)' })
   cep?: string;

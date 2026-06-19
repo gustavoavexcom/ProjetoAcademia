@@ -103,9 +103,31 @@
   font-weight: 600;
 }
 
+.topbar__logout {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.topbar__logout:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
 @media (max-width: 720px) {
   .topbar__search,
-  .topbar__user-name {
+  .topbar__user-name,
+  .topbar__logout-text {
     display: none;
   }
 }

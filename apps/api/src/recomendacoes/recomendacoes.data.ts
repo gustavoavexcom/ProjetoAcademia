@@ -1,4 +1,4 @@
-import { ObjetivoTreino } from '@academia/shared';
+import { ObjetivoTreino, type ItemCardapio } from '@academia/shared';
 import type { FaixaImc } from './imc.util';
 
 /** Listas base de recomendação por objetivo de treino. */
@@ -74,6 +74,94 @@ export const BASE_POR_OBJETIVO: Record<ObjetivoTreino, BaseObjetivo> = {
       'Multivitamínico em fases de déficit calórico (opcional)',
     ],
   },
+};
+
+/**
+ * Cardápio concreto sugerido por objetivo. Exemplos práticos de refeições —
+ * orientação geral, não substitui acompanhamento de nutricionista.
+ */
+export const CARDAPIO_POR_OBJETIVO: Record<ObjetivoTreino, ItemCardapio[]> = {
+  [ObjetivoTreino.FORCA_SUPERIOR]: [
+    {
+      refeicao: 'Café da manhã',
+      sugestao: 'Omelete de 3 ovos com queijo + aveia com banana e mel',
+    },
+    {
+      refeicao: 'Lanche da manhã',
+      sugestao: 'Iogurte natural com castanhas e uma fruta',
+    },
+    {
+      refeicao: 'Almoço',
+      sugestao:
+        'Filé de salmão grelhado + arroz integral + brócolis no vapor + salada verde',
+    },
+    {
+      refeicao: 'Pré-treino',
+      sugestao: 'Batata-doce cozida + frango grelhado desfiado',
+    },
+    {
+      refeicao: 'Pós-treino',
+      sugestao: 'Whey protein batido com banana',
+    },
+    {
+      refeicao: 'Jantar',
+      sugestao: 'Omelete ou filé de frango/tilápia + legumes no vapor + salada',
+    },
+  ],
+  [ObjetivoTreino.FORCA_INFERIOR]: [
+    {
+      refeicao: 'Café da manhã',
+      sugestao: 'Tapioca com ovo mexido + fruta + café',
+    },
+    {
+      refeicao: 'Lanche da manhã',
+      sugestao: 'Vitamina de banana com aveia e pasta de amendoim',
+    },
+    {
+      refeicao: 'Almoço',
+      sugestao:
+        'Patinho ou coxão mole grelhado + arroz + feijão + batata-doce + salada',
+    },
+    {
+      refeicao: 'Pré-treino',
+      sugestao: 'Arroz integral + frango grelhado',
+    },
+    {
+      refeicao: 'Pós-treino',
+      sugestao: 'Whey protein + banana (carboidrato de rápida absorção)',
+    },
+    {
+      refeicao: 'Jantar',
+      sugestao: 'Filé de frango + macarrão integral + legumes refogados',
+    },
+  ],
+  [ObjetivoTreino.ABDOMEN_DEFINIDO]: [
+    {
+      refeicao: 'Café da manhã',
+      sugestao: 'Omelete de claras + 1 fatia de pão integral + café sem açúcar',
+    },
+    {
+      refeicao: 'Lanche da manhã',
+      sugestao: 'Iogurte desnatado + 1 fruta',
+    },
+    {
+      refeicao: 'Almoço',
+      sugestao:
+        'Peito de frango grelhado + salada à vontade + porção pequena de arroz integral',
+    },
+    {
+      refeicao: 'Pré-treino',
+      sugestao: 'Fruta (maçã ou banana) + café',
+    },
+    {
+      refeicao: 'Pós-treino',
+      sugestao: 'Whey protein isolado',
+    },
+    {
+      refeicao: 'Jantar',
+      sugestao: 'Tilápia ou peixe branco grelhado + legumes no vapor + salada verde',
+    },
+  ],
 };
 
 /**

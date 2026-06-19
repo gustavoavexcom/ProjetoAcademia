@@ -5,7 +5,11 @@ import {
   type Recomendacao,
 } from '@academia/shared';
 import { calcularImc, faixaImc } from './imc.util';
-import { AJUSTE_POR_FAIXA, BASE_POR_OBJETIVO } from './recomendacoes.data';
+import {
+  AJUSTE_POR_FAIXA,
+  BASE_POR_OBJETIVO,
+  CARDAPIO_POR_OBJETIVO,
+} from './recomendacoes.data';
 import { GerarRecomendacaoDto } from './dto/gerar-recomendacao.dto';
 
 @Injectable()
@@ -33,6 +37,7 @@ export class RecomendacoesService {
       objetivo: dto.objetivo,
       exercicios: mesclar(base.exercicios, ajuste?.exercicios),
       alimentacao: mesclar(base.alimentacao, ajuste?.alimentacao),
+      cardapio: CARDAPIO_POR_OBJETIVO[dto.objetivo],
       suplementos: mesclar(base.suplementos, ajuste?.suplementos),
     };
   }

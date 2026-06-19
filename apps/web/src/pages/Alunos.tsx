@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { StatusAluno, type Plano } from '@academia/shared';
 import { apiDelete, apiGet, apiPatch, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
-import { Field, SelectField } from '../ui/Form';
+import { AutocompleteField, Field, SelectField, avancarComEnter } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
 import { CameraCapture } from '../ui/CameraCapture';
 import { QrCode } from '../ui/QrCode';
 
 interface AlunoRow {
   id: string;
+  matricula: number;
   nome: string;
   email?: string | null;
   cpf: string;
@@ -16,6 +17,7 @@ interface AlunoRow {
   status: StatusAluno;
   dataMatricula?: string | null;
   planoId?: string | null;
+  vencimentoPlano?: string | null;
   plano?: Plano | null;
   cep?: string | null;
   logradouro?: string | null;
@@ -35,6 +37,7 @@ interface FormState {
   status: StatusAluno;
   dataMatricula: string;
   planoId: string;
+  vencimentoPlano: string;
   cep: string;
   logradouro: string;
   numero: string;
@@ -52,6 +55,7 @@ const VAZIO: FormState = {
   status: StatusAluno.ATIVO,
   dataMatricula: '',
   planoId: '',
+  vencimentoPlano: '',
   cep: '',
   logradouro: '',
   numero: '',
@@ -75,6 +79,7 @@ export default function Alunos() {
   const [form, setForm] = useState<FormState>(VAZIO);
   const [editId, setEditId] = useState<string | null>(null);
   const [qrAtual, setQrAtual] = useState<string | null>(null);
+  const [matriculaAtual, setMatriculaAtual] = useState<number | null>(null);
   const [erro, setErro] = useState<string>();
   const [salvando, setSalvando] = useState(false);
   const [buscandoCep, setBuscandoCep] = useState(false);
@@ -132,12 +137,14 @@ export default function Alunos() {
     setForm(VAZIO);
     setEditId(null);
     setQrAtual(null);
+    setMatriculaAtual(null);
     setErro(undefined);
   }
 
   function editar(a: AlunoRow) {
     setEditId(a.id);
     setQrAtual(a.qrCode ?? null);
+    setMatriculaAtual(a.matricula);
     setErro(undefined);
     setForm({
       nome: a.nome,
@@ -147,6 +154,7 @@ export default function Alunos() {
       status: a.status,
       dataMatricula: a.dataMatricula ? a.dataMatricula.slice(0, 10) : '',
       planoId: a.planoId ?? '',
+      vencimentoPlano: a.vencimentoPlano ? a.vencimentoPlano.slice(0, 10) : '',
       cep: a.cep ?? '',
       logradouro: a.logradouro ?? '',
       numero: a.numero ?? '',
@@ -169,6 +177,9 @@ export default function Alunos() {
     if (form.telefone) payload.telefone = form.telefone;
     if (form.dataMatricula) payload.dataMatricula = form.dataMatricula;
     if (form.planoId) payload.planoId = form.planoId;
+    // Prisma (DateTime) exige ISO completo; o input date entrega só AAAA-MM-DD.
+    if (form.vencimentoPlano)
+      payload.vencimentoPlano = new Date(`${form.vencimentoPlano}T00:00:00`).toISOString();
     if (form.cep) payload.cep = form.cep.replace(/\D/g, '');
     if (form.logradouro) payload.logradouro = form.logradouro;
     if (form.numero) payload.numero = form.numero;
@@ -213,6 +224,7 @@ export default function Alunos() {
           '—'
         ),
     },
+    { header: 'Matrícula', render: (a) => a.matricula },
     { header: 'Nome', render: (a) => a.nome },
     { header: 'CPF/CNPJ', render: (a) => a.cpf },
     { header: 'Telefone', render: (a) => a.telefone ?? '—' },
@@ -243,9 +255,10 @@ export default function Alunos() {
           <h2>{editId ? 'Editar aluno' : 'Cadastrar aluno'}</h2>
         </div>
         {erro && <div className="alert alert--error">{erro}</div>}
-        <div className="crud__form-grid">
-          <Field
+        <div className="crud__form-grid" onKeyDown={avancarComEnter}>
+          <AutocompleteField
             label="Nome"
+            options={alunos.map((a) => a.nome)}
             value={form.nome}
             onChange={(e) => setForm({ ...form, nome: e.target.value })}
           />
@@ -283,6 +296,12 @@ export default function Alunos() {
               </option>
             ))}
           </SelectField>
+          <Field
+            label="Vencimento do plano"
+            type="date"
+            value={form.vencimentoPlano}
+            onChange={(e) => setForm({ ...form, vencimentoPlano: e.target.value })}
+          />
           <SelectField
             label="Status"
             value={form.status}
@@ -302,7 +321,7 @@ export default function Alunos() {
           <h2 style={{ fontSize: '0.95rem' }}>Endereço</h2>
           {buscandoCep && <span className="crud__hint">Buscando CEP…</span>}
         </div>
-        <div className="crud__form-grid">
+        <div className="crud__form-grid" onKeyDown={avancarComEnter}>
           <Field
             label="CEP"
             value={form.cep}
@@ -346,6 +365,15 @@ export default function Alunos() {
               onClear={() => setForm((f) => ({ ...f, fotoBase64: '' }))}
             />
           </div>
+          {matriculaAtual != null && (
+            <div className="field">
+              <span className="field__label">Número de matrícula</span>
+              <input className="field__control" value={matriculaAtual} readOnly />
+              <span className="qr-code__hint">
+                Informe este número na catraca quando o aluno não trouxer o QR.
+              </span>
+            </div>
+          )}
           {qrAtual && (
             <div className="field">
               <span className="field__label">QR code de acesso (catraca)</span>

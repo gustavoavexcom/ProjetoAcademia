@@ -385,3 +385,38 @@
   font-size: 0.85rem;
   color: var(--text);
 }
+
+/* Cardápio concreto sugerido (refeição + pratos) */
+.reco-cardapio {
+  margin-top: var(--space-5);
+}
+.reco-cardapio h3 {
+  font-size: 0.9rem;
+  margin-bottom: var(--space-3);
+  color: var(--brand-blue);
+}
+.reco-cardapio ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.reco-cardapio li {
+  display: grid;
+  grid-template-columns: minmax(120px, 160px) 1fr;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}
+.reco-cardapio__refeicao {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--brand-blue);
+}
+.reco-cardapio__sugestao {
+  font-size: 0.85rem;
+  color: var(--text);
+}

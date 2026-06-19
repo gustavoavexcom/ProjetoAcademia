@@ -19,6 +19,7 @@ export type NavKey =
   | 'dashboard'
   | 'alunos'
   | 'funcionarios'
+  | 'exercicios'
   | 'planos'
   | 'financeiro'
   | 'fiscal'
@@ -43,6 +44,7 @@ export const NAV_ITEMS: NavItem[] = [
   { key: 'financeiro', label: 'Financeiro', icon: IconMoney },
   { key: 'fiscal', label: 'Fiscal (NFS-e)', icon: IconReceipt },
   { key: 'treinos', label: 'Treinos', icon: IconDumbbell },
+  { key: 'exercicios', label: 'Exercícios & Aparelhos', icon: IconDumbbell },
   { key: 'avaliacao', label: 'Avaliação & Recomendação', icon: IconChart },
   { key: 'acesso', label: 'Acesso', icon: IconDoor },
   { key: 'agenda', label: 'Agendamento', icon: IconCalendar },

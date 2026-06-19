@@ -1,0 +1,78 @@
+/* Calendário mensal do módulo de Agendamento (MOD-09). */
+.calendario {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-2);
+}
+
+.calendario__cabecalho {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-bottom: var(--space-1);
+}
+
+.calendario__vazio {
+  min-height: 84px;
+}
+
+/* Demais dias ficam em branco e clicáveis para um novo agendamento. */
+.calendario__dia {
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: var(--space-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.calendario__dia:hover {
+  border-color: var(--brand-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendario__dia--hoje {
+  border-color: var(--brand-blue);
+}
+
+/* Vermelho quando o agendamento é para hoje. */
+.calendario__dia--alerta {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+.calendario__numero {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.calendario__dia--alerta .calendario__numero {
+  color: var(--danger);
+}
+
+.calendario__evento {
+  width: 100%;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: var(--brand-blue-50);
+  color: var(--brand-blue-700);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendario__dia--alerta .calendario__evento {
+  background: var(--danger);
+  color: #fff;
+}

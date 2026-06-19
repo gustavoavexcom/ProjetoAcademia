@@ -10,6 +10,7 @@ interface AppShellProps {
   apiState: ApiState;
   apiDetail?: string;
   onNavigate: (key: NavKey) => void;
+  onLogout: () => void;
   children: ReactNode;
 }
 
@@ -19,13 +20,14 @@ export default function AppShell({
   apiState,
   apiDetail,
   onNavigate,
+  onLogout,
   children,
 }: AppShellProps) {
   return (
     <div className="shell">
       <Sidebar active={active} onNavigate={onNavigate} />
       <div className="shell__main">
-        <Topbar title={title} apiState={apiState} apiDetail={apiDetail} />
+        <Topbar title={title} apiState={apiState} apiDetail={apiDetail} onLogout={onLogout} />
         <main className="shell__content">{children}</main>
       </div>
     </div>

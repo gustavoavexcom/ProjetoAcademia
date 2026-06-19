@@ -13,8 +13,10 @@ import { PrismaClient, Prisma, StatusAluno } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Caminho do CSV na raiz do monorepo (este arquivo vive em apps/api/prisma).
+// Caminho dos CSVs na raiz do monorepo (este arquivo vive em apps/api/prisma).
 const CSV_PATH = resolve(__dirname, '../../../historico_academia.csv');
+const CSV_FUNCIONARIOS = resolve(__dirname, '../../../funcionarios.csv');
+const CSV_EXERCICIOS = resolve(__dirname, '../../../exercicios.csv');
 
 /** Textos que representam "telefone ausente". */
 const TELEFONE_INVALIDO = [
@@ -111,6 +113,63 @@ async function limparBanco() {
   await prisma.mensalidade.deleteMany();
   await prisma.aluno.deleteMany();
   await prisma.plano.deleteMany();
+  // Catálogos independentes (sem FKs).
+  await prisma.funcionario.deleteMany();
+  await prisma.exercicio.deleteMany();
+}
+
+/** Lê um CSV simples (separador ';') e retorna as linhas como arrays de colunas. */
+function lerLinhasCsv(caminho: string): string[][] {
+  const conteudo = readFileSync(caminho, 'utf-8');
+  const linhas = conteudo
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
+  linhas.shift(); // remove cabeçalho
+  return linhas.map((l) => l.split(';').map((c) => c.trim()));
+}
+
+/** Importa funcionários do PDF (funcionarios.csv): Nome;CPF;Funcao;Turno. */
+async function importarFuncionarios() {
+  const linhas = lerLinhasCsv(CSV_FUNCIONARIOS);
+  const cpfsVistos = new Set<string>();
+  let importados = 0;
+  for (const [nome, doc, funcao, turno] of linhas) {
+    const cpf = apenasDigitos(doc ?? '');
+    if (!nome || !cpf || cpfsVistos.has(cpf)) continue;
+    cpfsVistos.add(cpf);
+    await prisma.funcionario.create({
+      data: {
+        nome,
+        cpf,
+        funcao: (funcao ?? '').trim() || 'Não informado',
+        turno: (turno ?? '').trim() || null,
+      },
+    });
+    importados++;
+  }
+  console.log(`Funcionários importados: ${importados}`);
+}
+
+/** Importa o catálogo de exercícios/aparelhos (exercicios.csv): Nome;Grupo;Aparelho. */
+async function importarExercicios() {
+  const linhas = lerLinhasCsv(CSV_EXERCICIOS);
+  const nomesVistos = new Set<string>();
+  let importados = 0;
+  for (const [nome, grupo, aparelho] of linhas) {
+    const chave = (nome ?? '').toLowerCase();
+    if (!nome || nomesVistos.has(chave)) continue;
+    nomesVistos.add(chave);
+    await prisma.exercicio.create({
+      data: {
+        nome,
+        grupoMuscular: (grupo ?? '').trim() || 'Não informado',
+        aparelho: (aparelho ?? '').trim() || 'Não informado',
+      },
+    });
+    importados++;
+  }
+  console.log(`Exercícios importados: ${importados}`);
 }
 
 async function main() {
@@ -172,6 +231,10 @@ async function main() {
   console.log(
     `Alunos importados: ${importados} | duplicados ignorados: ${duplicados} | sem documento: ${semDocumento}`,
   );
+
+  // 3) Funcionários e catálogo de exercícios/aparelhos (importados do PDF).
+  await importarFuncionarios();
+  await importarExercicios();
 }
 
 main()

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { TipoAcesso, type ResultadoCheckin } from '@academia/shared';
+import { TipoAcesso, type Aluno, type ResultadoCheckin } from '@academia/shared';
 import { apiDelete, apiGet, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
-import { SelectField } from '../ui/Form';
+import { Field, SelectField } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
 import { QrScanner } from '../ui/QrScanner';
 
@@ -29,6 +29,11 @@ export default function Acesso() {
   const [processando, setProcessando] = useState(false);
   const [resultado, setResultado] = useState<ResultadoCheckin | null>(null);
   const [erroLeitura, setErroLeitura] = useState<string>();
+  // Fallback sem QR: busca por matrícula + confirmação visual pela foto.
+  const [matricula, setMatricula] = useState('');
+  const [alunoMatricula, setAlunoMatricula] = useState<Aluno | null>(null);
+  const [erroMatricula, setErroMatricula] = useState<string>();
+  const [buscando, setBuscando] = useState(false);
 
   async function carregar() {
     try {
@@ -76,6 +81,37 @@ export default function Acesso() {
     } finally {
       // Pequena pausa para o operador ver a confirmação antes da próxima leitura.
       setTimeout(() => setProcessando(false), 2000);
+    }
+  }
+
+  /** Busca o aluno pela matrícula para o atendente confirmar a foto antes de gravar. */
+  async function buscarPorMatricula() {
+    const numero = matricula.trim();
+    if (!numero) return;
+    setBuscando(true);
+    setErroMatricula(undefined);
+    setAlunoMatricula(null);
+    try {
+      const aluno = await apiGet<Aluno>(`/alunos/matricula/${numero}`);
+      setAlunoMatricula(aluno);
+    } catch (e) {
+      setErroMatricula((e as Error).message);
+    } finally {
+      setBuscando(false);
+    }
+  }
+
+  /** Confirma a presença do aluno localizado por matrícula (cria um registro de acesso). */
+  async function confirmarPorMatricula(tipo: TipoAcesso) {
+    if (!alunoMatricula) return;
+    setErroMatricula(undefined);
+    try {
+      await apiPost('/acessos', { alunoId: alunoMatricula.id, tipo });
+      await carregar();
+      setMatricula('');
+      setAlunoMatricula(null);
+    } catch (e) {
+      setErroMatricula((e as Error).message);
     }
   }
 
@@ -155,6 +191,72 @@ export default function Acesso() {
             <div>
               <div className="checkin__nome">QR não reconhecido</div>
               <div className="checkin__meta">{erroLeitura}</div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="crud__panel">
+        <div className="crud__panel-head">
+          <h2>Catraca — sem QR (busca por matrícula)</h2>
+          <span className="crud__hint">
+            Quando o aluno não traz o QR, informe a matrícula e confirme pela foto.
+          </span>
+        </div>
+        <div className="crud__form-grid">
+          <Field
+            label="Número de matrícula"
+            type="number"
+            inputMode="numeric"
+            value={matricula}
+            onChange={(e) => setMatricula(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') buscarPorMatricula();
+            }}
+          />
+        </div>
+        <div className="crud__actions">
+          <Button onClick={buscarPorMatricula} disabled={!matricula.trim() || buscando}>
+            {buscando ? 'Buscando…' : 'Buscar'}
+          </Button>
+        </div>
+        {alunoMatricula && (
+          <>
+            <div className="checkin" style={{ marginTop: 'var(--space-4)' }}>
+              {alunoMatricula.fotoBase64 ? (
+                <img
+                  src={alunoMatricula.fotoBase64}
+                  alt={alunoMatricula.nome}
+                  className="checkin__foto"
+                />
+              ) : null}
+              <div>
+                <div className="checkin__nome">
+                  {alunoMatricula.nome} · matrícula {alunoMatricula.matricula}
+                </div>
+                <div className="checkin__meta">
+                  Confira se é a pessoa antes de confirmar · situação: {alunoMatricula.status}
+                </div>
+              </div>
+            </div>
+            <div className="crud__actions" style={{ marginTop: 'var(--space-4)' }}>
+              <Button onClick={() => confirmarPorMatricula(TipoAcesso.ENTRADA)}>
+                Confirmar entrada
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => confirmarPorMatricula(TipoAcesso.SAIDA)}
+              >
+                Confirmar saída
+              </Button>
+            </div>
+          </>
+        )}
+        {erroMatricula && (
+          <div className="checkin checkin--erro" style={{ marginTop: 'var(--space-4)' }}>
+            <div>
+              <div className="checkin__nome">Matrícula não encontrada</div>
+              <div className="checkin__meta">{erroMatricula}</div>
             </div>
           </div>
         )}

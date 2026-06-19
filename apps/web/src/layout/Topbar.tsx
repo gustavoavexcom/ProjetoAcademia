@@ -1,4 +1,4 @@
-import { IconSearch } from '../ui/icons';
+import { IconDoor, IconSearch } from '../ui/icons';
 import './Topbar.css';
 
 export type ApiState = 'loading' | 'ok' | 'erro';
@@ -7,6 +7,7 @@ interface TopbarProps {
   title: string;
   apiState: ApiState;
   apiDetail?: string;
+  onLogout: () => void;
 }
 
 const STATUS_LABEL: Record<ApiState, string> = {
@@ -15,7 +16,7 @@ const STATUS_LABEL: Record<ApiState, string> = {
   erro: 'API indisponível',
 };
 
-export default function Topbar({ title, apiState, apiDetail }: TopbarProps) {
+export default function Topbar({ title, apiState, apiDetail, onLogout }: TopbarProps) {
   return (
     <header className="topbar">
       <h1 className="topbar__title">{title}</h1>
@@ -38,6 +39,16 @@ export default function Topbar({ title, apiState, apiDetail }: TopbarProps) {
           <span className="topbar__avatar">RA</span>
           <span className="topbar__user-name">Recepção</span>
         </div>
+
+        <button
+          type="button"
+          className="topbar__logout"
+          onClick={onLogout}
+          title="Fechar sessão e voltar ao login"
+        >
+          <IconDoor size={18} />
+          <span className="topbar__logout-text">Sair</span>
+        </button>
       </div>
     </header>
   );

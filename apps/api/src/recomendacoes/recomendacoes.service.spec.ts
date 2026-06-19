@@ -64,4 +64,13 @@ describe('RecomendacoesService', () => {
     expect(r.imc).toBeNull();
     expect(r.exercicios.length).toBeGreaterThan(0);
   });
+
+  it('inclui cardápio concreto por refeição para o objetivo', () => {
+    const r = service.gerar({ objetivo: ObjetivoTreino.FORCA_SUPERIOR });
+    expect(r.cardapio.length).toBeGreaterThan(0);
+    expect(r.cardapio.every((c) => c.refeicao && c.sugestao)).toBe(true);
+    // O cardápio de membros superiores prioriza pratos ricos em proteína.
+    const almoco = r.cardapio.find((c) => c.refeicao === 'Almoço');
+    expect(almoco?.sugestao).toMatch(/salmão/i);
+  });
 });

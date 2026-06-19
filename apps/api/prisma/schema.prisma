@@ -45,6 +45,9 @@ enum ObjetivoTreino {
 // MOD-01 — Aluno
 model Aluno {
   id            String           @id @default(uuid())
+  // Número de matrícula sequencial e amigável (gerado no cadastro).
+  // Usado no check-in da catraca quando o aluno não traz o QR code.
+  matricula     Int              @unique @default(autoincrement())
   nome          String
   email         String?          @unique
   cpf           String           @unique
@@ -62,6 +65,9 @@ model Aluno {
   fotoBase64    String?
   // Token único codificado no QR code do aluno. Lido pela catraca para confirmar o acesso.
   qrCode        String?          @unique @default(uuid())
+  // Data-limite de validade/renovação do plano contratado (ex.: plano anual).
+  // Alimenta os avisos do painel (verde = próximo de vencer; vermelho = vencido sem renovação).
+  vencimentoPlano DateTime?
   plano         Plano?           @relation(fields: [planoId], references: [id])
   planoId       String?
   criadoEm      DateTime         @default(now())
@@ -74,6 +80,34 @@ model Aluno {
 
   @@index([planoId])
   @@map("alunos")
+}
+
+// MOD-02 — Funcionário / Instrutor
+model Funcionario {
+  id           String   @id @default(uuid())
+  nome         String
+  cpf          String   @unique
+  // Função na academia (ex.: Atendente, Professor, Personal, Professor de Lutas).
+  funcao       String
+  // Turno/horário de trabalho (texto livre — admite combinações: "Manhã/Tarde").
+  turno        String?
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("funcionarios")
+}
+
+// MOD-06 — Catálogo de exercícios e aparelhos (base para montar treinos)
+model Exercicio {
+  id            String   @id @default(uuid())
+  nome          String   @unique
+  grupoMuscular String
+  // Aparelho/equipamento utilizado no exercício.
+  aparelho      String
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  @@map("exercicios")
 }
 
 // MOD-03 — Plano
@@ -167,6 +201,38 @@ model ExercicioTreino {
 
   @@index([treinoId])
   @@map("exercicios_treino")
+}
+
+// MOD-09 — Agendamento de aulas e atividades
+model Agendamento {
+  id           String   @id @default(uuid())
+  // Título/descrição do compromisso (ex.: "Aula experimental", "Avaliação física").
+  nome         String
+  // Data e hora do agendamento.
+  data         DateTime
+  // Pessoa que vai atender (instrutor/atendente) — texto livre.
+  atendente    String
+  observacao   String?
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@index([data])
+  @@map("agendamentos")
+}
+
+// MOD-10 — Notificações e lembretes aos alunos
+model Notificacao {
+  id           String   @id @default(uuid())
+  // Nome/título da notificação (ex.: "Festa Junina").
+  titulo       String
+  // Tipo/categoria (ex.: Evento, Aviso, Lembrete).
+  tipo         String
+  // Mensagem completa exibida ao aluno/painel.
+  mensagem     String
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("notificacoes")
 }
 
 // MOD-05 — Fiscal (NFS-e)

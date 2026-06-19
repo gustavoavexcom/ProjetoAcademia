@@ -359,6 +359,23 @@ export default function Avaliacao() {
                       </ul>
                     </div>
                   </div>
+                  {reco.cardapio.length > 0 && (
+                    <div className="reco-cardapio">
+                      <h3>Cardápio sugerido</h3>
+                      <ul>
+                        {reco.cardapio.map((item, i) => (
+                          <li key={i}>
+                            <span className="reco-cardapio__refeicao">
+                              {item.refeicao}
+                            </span>
+                            <span className="reco-cardapio__sugestao">
+                              {item.sugestao}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <p className="crud__hint" style={{ marginTop: 'var(--space-4)' }}>
                     Orientação geral — não substitui acompanhamento de instrutor/nutricionista.
                   </p>

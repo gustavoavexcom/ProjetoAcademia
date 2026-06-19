@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
+import type { Funcionario } from '@academia/shared';
 import { apiDelete, apiGet, apiPatch, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
-import { Field, SelectField } from '../ui/Form';
+import { AutocompleteField, Field, SelectField, avancarComEnter } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
 
 interface AlunoMin {
   id: string;
   nome: string;
 }
+
+/** Funções consideradas "instrutor" para sugerir no campo de treino. */
+const FUNCOES_INSTRUTOR = /professor|personal|instrutor/i;
 
 interface ExercicioForm {
   nome: string;
@@ -29,6 +33,7 @@ interface TreinoRow {
 export default function Treinos() {
   const [alunos, setAlunos] = useState<AlunoMin[]>([]);
   const [treinos, setTreinos] = useState<TreinoRow[]>([]);
+  const [instrutores, setInstrutores] = useState<string[]>([]);
   const [erro, setErro] = useState<string>();
 
   // --- Formulário de treino ---
@@ -41,12 +46,16 @@ export default function Treinos() {
 
   async function carregar() {
     try {
-      const [t, a] = await Promise.all([
+      const [t, a, f] = await Promise.all([
         apiGet<TreinoRow[]>('/treinos'),
         apiGet<AlunoMin[]>('/alunos'),
+        apiGet<Funcionario[]>('/funcionarios'),
       ]);
       setTreinos(t);
       setAlunos(a);
+      setInstrutores(
+        f.filter((x) => FUNCOES_INSTRUTOR.test(x.funcao)).map((x) => x.nome),
+      );
     } catch (e) {
       setErro((e as Error).message);
     }
@@ -155,10 +164,15 @@ export default function Treinos() {
         <div className="crud__panel-head">
           <h2>{editId ? 'Editar treino' : 'Cadastrar treino'}</h2>
         </div>
-        <div className="crud__form-grid">
+        <div className="crud__form-grid" onKeyDown={avancarComEnter}>
           <Field label="Nome" value={tNome} onChange={(e) => setTNome(e.target.value)} />
           <Field label="Objetivo" value={tObjetivo} onChange={(e) => setTObjetivo(e.target.value)} />
-          <Field label="Instrutor" value={tInstrutor} onChange={(e) => setTInstrutor(e.target.value)} />
+          <AutocompleteField
+            label="Instrutor"
+            options={instrutores}
+            value={tInstrutor}
+            onChange={(e) => setTInstrutor(e.target.value)}
+          />
           <SelectField label="Atribuir ao aluno" value={tAluno} onChange={(e) => setTAluno(e.target.value)}>
             <option value="">— não atribuído —</option>
             {alunos.map((a) => (
@@ -176,7 +190,7 @@ export default function Treinos() {
           </Button>
         </div>
         {exercicios.map((ex, i) => (
-          <div className="crud__form-grid" key={i}>
+          <div className="crud__form-grid" key={i} onKeyDown={avancarComEnter}>
             <Field
               label="Exercício"
               value={ex.nome}

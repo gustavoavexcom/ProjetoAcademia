@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Plano } from '@academia/shared';
 import { apiDelete, apiGet, apiPatch, apiPost } from '../api/client';
 import { Button } from '../ui/Button';
-import { Field, SelectField } from '../ui/Form';
+import { Field, SelectField, avancarComEnter } from '../ui/Form';
 import { DataTable, type Column } from '../ui/DataTable';
 
 interface FormState {
@@ -119,7 +119,7 @@ export default function Planos() {
           <h2>{editId ? 'Editar plano' : 'Cadastrar plano'}</h2>
         </div>
         {erro && <div className="alert alert--error">{erro}</div>}
-        <div className="crud__form-grid">
+        <div className="crud__form-grid" onKeyDown={avancarComEnter}>
           <Field
             label="Nome"
             value={form.nome}

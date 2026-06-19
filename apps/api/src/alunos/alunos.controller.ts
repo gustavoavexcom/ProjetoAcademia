@@ -31,6 +31,12 @@ export class AlunosController {
     return this.alunosService.findByCpf(cpf);
   }
 
+  /** Localiza o aluno pelo número de matrícula (check-in na catraca sem QR code). */
+  @Get('matricula/:matricula')
+  findByMatricula(@Param('matricula') matricula: string) {
+    return this.alunosService.findByMatricula(matricula);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.alunosService.findOne(id);
